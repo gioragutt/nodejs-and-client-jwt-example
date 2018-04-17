@@ -3,7 +3,7 @@ require('app-module-path').addPath(__dirname) // eslint-disable-line import/no-u
 const express = require('express')
 const {
   loggers: {logger, expressLogger},
-  expressHelpers: {errorHandler, createApiEndpoint: _},
+  expressHelpers: {errorHandler},
 } = require('@welldone-software/node-toolbelt')
 const compression = require('compression')
 const bodyParser = require('body-parser')
