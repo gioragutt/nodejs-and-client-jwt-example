@@ -5,10 +5,8 @@ const server = http('http://localhost:3000/api/v1')
 
 const saveToLocalStorage = data =>
   Object.entries(data)
-    .forEach(([key, value]) => {
-      console.log({key, value})
-      global.vorpal.localStorage.setItem(key, JSON.stringify(value))
-    })
+    .forEach(([key, value]) =>
+      global.vorpal.localStorage.setItem(key, JSON.stringify(value)))
 
 const handleAuthenticationRequest = response => saveToLocalStorage(response)
 
@@ -43,6 +41,13 @@ const commands = [{
 }, {
   command: 'login <username> <password>',
   action: authenticationAction('/login'),
+},
+{
+  command: 'profile',
+  action() {
+    this.log('Profile is')
+    this.log(global.vorpal.localStorage.getItem('profile'))
+  },
 },
 {
   command: 'request',

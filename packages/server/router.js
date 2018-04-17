@@ -4,14 +4,12 @@ const {
   // loggers: {logger, expressLogger},
   expressHelpers: {createApiEndpoint: _},
 } = require('@welldone-software/node-toolbelt')
-const auth = require('app/auth')
-const config = require('app/config')
+const auth = require('./app/auth')
+const config = require('./app/config')
 
 const router = new Router()
 
 router.use(jwtRequest(config.jwtSecret))
-
-const secure = () => jwtSecure()
 
 router.post(
   '/signup',
@@ -25,7 +23,7 @@ router.post(
 
 router.get(
   '/protected',
-  secure(),
+  jwtSecure(),
   _(() => 'im in')
 )
 
