@@ -5,14 +5,30 @@
   "main": "index.js",
   "scripts": {
     "lint:fix": "prettier-eslint --write \"src/**/*.js\" && eslint src",
+    "start": "node . | pino",
+    "prod": "nodemon -e js . | pino",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@welldone-software/node-toolbelt": "^1.4.0",
+    "axios": "^0.18.0",
+    "body-parser": "^1.18.2",
+    "common-tags": "^1.7.2",
+    "compression": "^1.7.2",
+    "express": "^4.16.3",
+    "express-status-monitor": "^1.0.1",
+    "lodash": "^4.17.5",
+    "socket.io": "^2.1.0",
+    "uuid": "^3.2.1"
+  },
   "devDependencies": {
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.11.0",
     "eslint-plugin-node": "^6.0.1",
+    "nodemon": "^1.17.3",
+    "pino": "^4.16.1",
     "prettier": "^1.12.1",
     "prettier-eslint": "^8.8.1",
     "prettier-eslint-cli": "^4.7.1"
