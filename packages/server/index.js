@@ -1,3 +1,5 @@
+require('app-module-path').addPath(__dirname) // eslint-disable-line import/no-unresolved
+
 const express = require('express')
 const {
   loggers: {logger, expressLogger},
@@ -7,9 +9,9 @@ const compression = require('compression')
 const bodyParser = require('body-parser')
 const expressStatusMonitor = require('express-status-monitor')
 
-const router = new express.Router()
+const config = require('./app/config')
 
-router.get('/test', _(() => 'hello world'))
+const router = require('./router')
 
 const app = express()
 
@@ -22,6 +24,6 @@ app.use('/api/v1', router)
 app.use(expressStatusMonitor())
 app.use(errorHandler)
 
-const server = app.listen(3000, () => {
+const server = app.listen(config.port, () => {
   logger.info({binding: server.address()}, 'http server started')
 })
