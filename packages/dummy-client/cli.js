@@ -8,10 +8,10 @@ const initializeCommand = (vorpal, {command: name, description, alias, autocompl
   if (autocomplete) {
     command.autocomplete(autocomplete)
   }
-  command.action((argsAndOptions, callback) => {
+  command.action(function commandAction(argsAndOptions, callback) {
     const {options, ...args} = argsAndOptions
     Promise.resolve()
-      .then(() => action(args, options))
+      .then(() => action.bind(this)(args, options))
       .then(callback)
       .catch(callback)
   })
@@ -25,6 +25,7 @@ const initializeCommand = (vorpal, {command: name, description, alias, autocompl
 const commandLine = (commands, {delimiter, onExit} = {}) => {
   const vorpal = Vorpal()
   vorpal.history('dummy-client')
+  vorpal.localStorage('dummy-client')
   global.vorpal = vorpal // allow debugging via console
   commands.forEach(desc => initializeCommand(vorpal, desc))
   vorpal.delimiter(delimiter || '$').show()

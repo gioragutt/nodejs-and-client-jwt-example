@@ -3,90 +3,58 @@ const http = require('./http')
 
 const server = http('http://localhost:3000/api/v1')
 
-let loginData = {}
+const saveToLocalStorage = data =>
+  Object.entries(data)
+    .forEach(([key, value]) => {
+      console.log({key, value})
+      global.vorpal.localStorage.setItem(key, JSON.stringify(value))
+    })
 
-const httpOptions = () => ({
-  withCredentials: true,
-  responseType: 'json',
-  headers: loginData.token ? {
-    Authorization: `Bearer ${loginData.token}`,
-  } : {},
-})
+const handleAuthenticationRequest = response => saveToLocalStorage(response)
+
+const httpOptions = () => {
+  const token = global.vorpal.localStorage.getItem('token')
+  return {
+    withCredentials: true,
+    responseType: 'json',
+    headers: token ? {
+      Authorization: `Bearer ${JSON.parse(token)}`,
+    } : {},
+  }
+}
+
+const authenticationAction = path => async function authAction({
+  username,
+  password,
+}) {
+  try {
+    await server.post(path, {
+      username: `${username}`,
+      password: `${password}`,
+    }).then(handleAuthenticationRequest)
+  } catch (e) {
+    this.log(e)
+  }
+}
 
 const commands = [{
   command: 'signup <username> <password>',
-  action: async ({
-    username,
-    password,
-  }) => {
-    try {
-      loginData = await server.post('/signup', {
-        username: `${username}`,
-        password: `${password}`,
-      })
-    } catch (e) {
-      console.error(e)
-    }
-  },
-},
-{
+  action: authenticationAction('/signup'),
+}, {
   command: 'login <username> <password>',
-  action: async ({
-    username,
-    password,
-  }) => {
-    try {
-      loginData = await server.post('/login', {
-        username: `${username}`,
-        password: `${password}`,
-      })
-      console.log(loginData)
-    } catch (e) {
-      console.error(e)
-    }
-  },
+  action: authenticationAction('/login'),
 },
 {
   command: 'request',
-  action: async () => {
+  async action() {
     try {
-      console.log(await server.get('/protected', httpOptions()))
+      this.log(await server.get('/protected', httpOptions()))
     } catch (e) {
-      console.error(e)
+      this.log(e)
     }
   },
 }]
 
-/* {
-  //   command: 'remove <number>',
-  //   description: 'Removes a number from the list',
-  //   alias: 'rm',
-  //   action: callMethod(client, 'remove'),
-  // },
-  // {
-  //   command: 'query',
-  //   description: 'Shows the list',
-  //   alias: 'ls',
-  //   action: callMethod(client, 'query'),
-  // },
-  // {
-  //   command: 'clear',
-  //   description: 'Clears the list',
-  //   alias: 'c',
-  //   action: callMethod(client, 'clear'),
-  // },
-  // {
-  //   command: 'echo <message...>',
-  //   action: callMethod(client, 'echo', ({
-  //     message,
-  //     ...rest
-  //   }) => ({
-  //     message: message.join(' '),
-  //     ...rest
-  //   })),
-  // }, */
-
 cli(commands, {
   delimiter: 'Dummy Client $',
-  // onExit: () => client.disconnect()
 })
