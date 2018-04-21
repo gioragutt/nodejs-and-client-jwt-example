@@ -111,12 +111,15 @@ const commands = [
     command: 'request',
     validate: validate.loggedIn,
     action: async () => {
-      try {
-        vlog.info('requesting:')
-        vlog.info(await server.get('/protected', httpOptions()))
-      } catch (e) {
-        vlog.error(e)
-      }
+      vlog.info(await server.get('/protected', httpOptions()))
+    },
+  },
+  {
+    command: 'users',
+    validate: validate.loggedIn,
+    action: async () => {
+      const users = await server.get('/users', httpOptions())
+      vlog.info(`Connected users: ${JSON.stringify(users)}`)
     },
   },
   {
