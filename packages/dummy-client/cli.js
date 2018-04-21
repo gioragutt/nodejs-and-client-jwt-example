@@ -11,10 +11,10 @@ const initializeCommand = (
       command[key](value)
     }
   })
-  command.action(function commandAction(argsAndOptions, callback) {
+  command.action((argsAndOptions, callback) => {
     const {options, ...args} = argsAndOptions
     Promise.resolve()
-      .then(() => action.bind(this)(args, options))
+      .then(() => action(args, options))
       .then(callback)
       .catch(callback)
   })
@@ -45,9 +45,7 @@ const createVorpalLogger = (additionalLevels = {}) => {
     ...additionalLevels,
   }
 
-  const longestLevelLength = Math.max(...Object.keys(levels).map(level => level.length))
-  const format = (msg, level) =>
-    `${(new Date()).toLocaleString()} ${level.toUpperCase().padEnd(longestLevelLength)} - ${msg}`
+  const format = (msg, level) => `${(new Date()).toLocaleString()} ${level.toUpperCase()} - ${msg}`
 
   const vorpalLog = (color, level) => msg => global.vorpal.log(color(format(msg, level)))
 
