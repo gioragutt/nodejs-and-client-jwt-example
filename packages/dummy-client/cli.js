@@ -1,13 +1,16 @@
 const Vorpal = require('vorpal')
+const chalk = require('chalk')
 
-const initializeCommand = (vorpal, {command: name, description, alias, autocomplete, action}) => {
+const initializeCommand = (
+  vorpal,
+  {command: name, description, action, ...other}
+) => {
   const command = vorpal.command(name, description)
-  if (alias) {
-    command.alias(alias)
-  }
-  if (autocomplete) {
-    command.autocomplete(autocomplete)
-  }
+  Object.entries(other).forEach(([key, value]) => {
+    if (command[key]) {
+      command[key](value)
+    }
+  })
   command.action(function commandAction(argsAndOptions, callback) {
     const {options, ...args} = argsAndOptions
     Promise.resolve()
@@ -22,7 +25,7 @@ const initializeCommand = (vorpal, {command: name, description, alias, autocompl
  * @param {{command: String, [description]: String, [alias]: String, action: Function}[]} commands
  * @param {{[delimiter]: String}} options
  */
-const commandLine = (commands, {delimiter, onExit} = {}) => {
+const cli = (commands, {delimiter, onExit} = {}) => {
   const vorpal = Vorpal()
   vorpal.history('dummy-client')
   vorpal.localStorage('dummy-client')
@@ -34,4 +37,30 @@ const commandLine = (commands, {delimiter, onExit} = {}) => {
   }
 }
 
-module.exports = commandLine
+const createVorpalLogger = (additionalLevels = {}) => {
+  const levels = {
+    info: chalk.green,
+    warn: chalk.yellow,
+    error: chalk.red,
+    ...additionalLevels,
+  }
+
+  const longestLevelLength = Math.max(...Object.keys(levels).map(level => level.length))
+  const format = (msg, level) =>
+    `${(new Date()).toLocaleString()} ${level.toUpperCase().padEnd(longestLevelLength)} - ${msg}`
+
+  const vorpalLog = (color, level) => msg => global.vorpal.log(color(format(msg, level)))
+
+  return Object.entries(levels).reduce((logger, [level, color]) => {
+    logger[level] = vorpalLog(color, level)
+    return logger
+  }, {})
+}
+
+const vlog = createVorpalLogger()
+
+module.exports = {
+  cli,
+  vlog,
+  createVorpalLogger,
+}

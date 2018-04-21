@@ -13,9 +13,12 @@
     "@welldone-software/node-toolbelt": "^1.4.0",
     "app-module-path": "^2.2.0",
     "axios": "^0.18.0",
+    "chalk": "^2.4.0",
+    "common-tags": "^1.7.2",
     "connection-string": "^0.4.1",
     "lodash": "^4.17.5",
     "pino": "^4.11.0",
+    "socket.io-client": "^2.1.0",
     "stompit": "^0.25.0",
     "uuid": "^3.2.1",
     "vorpal": "^1.12.0"

@@ -1,27 +1,21 @@
-const cli = require('./cli')
+const {cli, vlog} = require('./cli')
 const http = require('./http')
+const io = require('socket.io-client')
 
 const server = http('http://localhost:3000/api/v1')
 
-const saveToLocalStorage = data =>
-  Object.entries(data)
-    .forEach(([key, value]) =>
-      global.vorpal.localStorage.setItem(key, JSON.stringify(value)))
+const {httpOptions, saveObjectToStorage, readFromStorage} = require('./utils')
 
-const handleAuthenticationRequest = response => saveToLocalStorage(response)
+let socket = null
 
-const httpOptions = () => {
-  const token = global.vorpal.localStorage.getItem('token')
-  return {
-    withCredentials: true,
-    responseType: 'json',
-    headers: token ? {
-      Authorization: `Bearer ${JSON.parse(token)}`,
-    } : {},
-  }
+const handleAuthenticationRequest = response => saveObjectToStorage(response)
+
+const validate = {
+  loggedIn: () => !!readFromStorage('token'),
+  websocketConnected: () => socket || (vlog.warn('socket.io not connected') || false),
 }
 
-const authenticationAction = path => async function authAction({
+const authenticationAction = (path, onSuccess) => async function authAction({
   username,
   password,
 }) {
@@ -30,36 +24,63 @@ const authenticationAction = path => async function authAction({
       username: `${username}`,
       password: `${password}`,
     }).then(handleAuthenticationRequest)
+      .then(onSuccess || (() => {}))
   } catch (e) {
-    this.log(e)
+    vlog.error(e.response.message)
   }
 }
 
-const commands = [{
-  command: 'signup <username> <password>',
-  action: authenticationAction('/signup'),
-}, {
-  command: 'login <username> <password>',
-  action: authenticationAction('/login'),
-},
-{
-  command: 'profile',
-  action() {
-    this.log('Profile is')
-    this.log(global.vorpal.localStorage.getItem('profile'))
-  },
-},
-{
-  command: 'request',
-  async action() {
-    try {
-      this.log(await server.get('/protected', httpOptions()))
-    } catch (e) {
-      this.log(e)
-    }
-  },
-}]
+const connectToWebsocket = () => {
+  const token = readFromStorage('token')
+  vlog.info(`Connecting to WS with token: ${token}`)
+  socket = io.connect('http://localhost:3000', {query: `token=${token}`})
 
-cli(commands, {
-  delimiter: 'Dummy Client $',
-})
+  socket.on('error', (error) => {
+    vlog.error(error)
+    socket = null
+  })
+
+  socket.on('connect', () => vlog.info('Successfully connected to WS'))
+}
+
+const commands = [
+  {
+    command: 'signup <username> <password>',
+    action: authenticationAction('/signup'),
+  },
+  {
+    command: 'login <username> <password>',
+    action: authenticationAction('/login', connectToWebsocket),
+  },
+  {
+    command: 'loginws',
+    validate: validate.loggedIn,
+    action: connectToWebsocket,
+  },
+  {
+    command: 'profile',
+    action: () => {
+      vlog.info('Profile is')
+      vlog.info(readFromStorage('profile'))
+    },
+  },
+  {
+    command: 'request',
+    validate: validate.loggedIn,
+    action: async () => {
+      try {
+        vlog.info('requesting:')
+        vlog.info(await server.get('/protected', httpOptions()))
+      } catch (e) {
+        vlog.error(e)
+      }
+    },
+  },
+  {
+    command: 'send <message...>',
+    validate: validate.websocketConnected,
+    action: ({message}) => socket.emit('message', message.join(' '), vlog.info),
+  },
+]
+
+cli(commands, {delimiter: 'Dummy Client $'})
