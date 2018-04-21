@@ -79,7 +79,9 @@ const commands = [
   {
     command: 'send <message...>',
     validate: validate.websocketConnected,
-    action: ({message}) => socket.emit('message', message.join(' '), vlog.info),
+    action: ({message}) => {
+      socket.emit('message', message.join(' '), vlog.info)
+    },
   },
 ]
 
