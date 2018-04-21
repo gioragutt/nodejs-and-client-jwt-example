@@ -6,9 +6,9 @@ const validator = require('validator')
 const config = require('./config')
 const users = require('./users')
 
-const makeTokenAndProfile = async ({id, username}) => ({
-  token: await generateToken(config.jwtSecret, {userId: id, verified: true}, '24h'),
-  profile: {id, username},
+const makeTokenAndProfile = async ({username}) => ({
+  token: await generateToken(config.jwtSecret, {userId: username, verified: true}, '24h'),
+  profile: {username},
 })
 
 const invalidUsernameOrPassword = () => new NotFoundError('invalidUsernameOrPassword')

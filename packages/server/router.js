@@ -6,8 +6,15 @@ const {
 } = require('@welldone-software/node-toolbelt')
 const auth = require('./app/auth')
 const config = require('./app/config')
+const users = require('./app/users')
 
 const router = new Router()
+const secure = jwtSecure({
+  findUser: ({id}) => {
+    const user = users.findUser(id)
+    return user && {dataValues: user}
+  },
+})
 
 router.use(jwtRequest(config.jwtSecret))
 
@@ -23,7 +30,7 @@ router.post(
 
 router.get(
   '/protected',
-  jwtSecure(),
+  secure,
   _(() => 'im in')
 )
 
