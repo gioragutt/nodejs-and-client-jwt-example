@@ -4,15 +4,43 @@ const io = require('socket.io-client')
 
 const server = http('http://localhost:3000/api/v1')
 
-const {httpOptions, saveObjectToStorage, readFromStorage} = require('./utils')
+const {
+  httpOptions,
+  saveObjectToStorage,
+  readFromStorage,
+  removeFromStorage,
+} = require('./utils')
 
 let socket = null
 
 const handleAuthenticationRequest = response => saveObjectToStorage(response)
 
+const checkValidation = (value, message) => {
+  if (!value) {
+    vlog.error(message)
+    return false
+  }
+  return true
+}
+
 const validate = {
-  loggedIn: () => !!readFromStorage('token'),
-  websocketConnected: () => socket || (vlog.warn('socket.io not connected') || false),
+  loggedIn: () => checkValidation(
+    readFromStorage('token'),
+    'Token expired or you\'re not logged in, please log in again'
+  ),
+  websocketConnected: () => checkValidation(socket, 'socket.io not connected'),
+}
+
+const logout = () => {
+  vlog.warn('logging out - removing localStorage and ws connection');
+  ['token', 'profile'].forEach(removeFromStorage)
+  socket = null
+}
+
+const validateTokenExpiration = ({code}) => {
+  if (code === 'invalid_token') {
+    logout()
+  }
 }
 
 const authenticationAction = (path, onSuccess) => async function authAction({
@@ -32,11 +60,15 @@ const authenticationAction = (path, onSuccess) => async function authAction({
 
 const connectToWebsocket = () => {
   const token = readFromStorage('token')
-  vlog.info(`Connecting to WS with token: ${token}`)
   socket = io.connect('http://localhost:3000', {query: `token=${token}`})
 
   socket.on('error', (error) => {
-    vlog.error(error)
+    validateTokenExpiration(error)
+    try {
+      vlog.error(typeof error === 'object' ? JSON.stringify(error) : error)
+    } catch (e) {
+      vlog.error(`Unknown error: ${error}`)
+    }
     socket = null
   })
 
@@ -53,15 +85,19 @@ const commands = [
     action: authenticationAction('/login', connectToWebsocket),
   },
   {
+    command: 'logout', action: logout,
+  },
+  {
     command: 'loginws',
     validate: validate.loggedIn,
     action: connectToWebsocket,
   },
   {
     command: 'profile',
+    validate: validate.loggedIn,
     action: () => {
       vlog.info('Profile is')
-      vlog.info(readFromStorage('profile'))
+      vlog.info(JSON.stringify(readFromStorage('profile')))
     },
   },
   {
@@ -86,3 +122,6 @@ const commands = [
 ]
 
 cli(commands, {delimiter: 'Dummy Client $'})
+if (validate.loggedIn()) {
+  connectToWebsocket()
+}

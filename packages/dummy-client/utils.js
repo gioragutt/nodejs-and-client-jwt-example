@@ -6,6 +6,8 @@ const readFromStorage = (key) => {
   return !value ? null : JSON.parse(value)
 }
 
+const removeFromStorage = key => global.vorpal.localStorage.removeItem(key)
+
 const saveObjectToStorage = data => Object.entries(data).forEach(saveToStorage)
 
 const httpOptions = () => {
@@ -21,4 +23,5 @@ module.exports = {
   httpOptions,
   saveObjectToStorage,
   readFromStorage,
+  removeFromStorage,
 }
