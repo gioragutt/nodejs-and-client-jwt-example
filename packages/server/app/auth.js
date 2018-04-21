@@ -14,7 +14,7 @@ const makeTokenAndProfile = async ({username}) => ({
 const invalidUsernameOrPassword = () => new NotFoundError('invalidUsernameOrPassword')
 
 const login = ({username, password}) => {
-  const user = users.findUser(({id: username}))
+  const user = users.findUser(username)
   if (!user) {
     throw invalidUsernameOrPassword()
   }
