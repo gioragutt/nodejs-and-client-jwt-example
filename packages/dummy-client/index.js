@@ -1,6 +1,7 @@
 const {cli, vlog} = require('./cli')
 const http = require('./http')
 const io = require('socket.io-client')
+const {get} = require('lodash')
 
 const server = http('http://localhost:3000/api/v1')
 
@@ -34,6 +35,9 @@ const validate = {
 const logout = () => {
   vlog.warn('logging out - removing localStorage and ws connection');
   ['token', 'profile'].forEach(removeFromStorage)
+  try {
+    socket.disconnect()
+  } catch (e) {}
   socket = null
 }
 
@@ -54,7 +58,7 @@ const authenticationAction = (path, onSuccess) => async function authAction({
     }).then(handleAuthenticationRequest)
       .then(onSuccess || (() => {}))
   } catch (e) {
-    vlog.error(e.response.message)
+    vlog.error(get(e, 'response.message') || e)
   }
 }
 
@@ -69,10 +73,13 @@ const connectToWebsocket = () => {
     } catch (e) {
       vlog.error(`Unknown error: ${error}`)
     }
-    socket = null
   })
 
   socket.on('connect', () => vlog.info('Successfully connected to WS'))
+  socket.on('disconnect', () => {
+    vlog.info('Websocket disconnected, logging out')
+    logout()
+  })
 }
 
 const commands = [
