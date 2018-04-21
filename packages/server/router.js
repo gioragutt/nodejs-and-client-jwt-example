@@ -34,4 +34,10 @@ router.get(
   _(() => 'im in')
 )
 
+router.get(
+  '/users',
+  secure,
+  _(() => users.allUsers())
+)
+
 module.exports = router

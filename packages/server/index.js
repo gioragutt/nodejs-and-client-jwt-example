@@ -35,8 +35,5 @@ const server = app.listen(config.port, () => {
     credentialsRequired: false,
   }))
 
-  socketio.sockets.on('connection', (socket) => {
-    logger.info(`hello ${socket.decoded_token.userId}!`)
-    wsRouter(socket)
-  })
+  wsRouter(socketio.sockets)
 })

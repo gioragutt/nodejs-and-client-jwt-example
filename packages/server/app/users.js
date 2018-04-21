@@ -1,6 +1,7 @@
 const {
   exceptions: {AlreadyExistsError},
 } = require('@welldone-software/node-toolbelt')
+const {omit} = require('lodash')
 
 const users = {}
 
@@ -16,7 +17,10 @@ const createUser = ({username, password}) => {
   return users[userData.username]
 }
 
+const allUsers = () => Object.values(users).map(user => omit(user, ['password']))
+
 module.exports = {
   createUser,
   findUser,
+  allUsers,
 }
