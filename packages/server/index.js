@@ -1,5 +1,3 @@
-require('app-module-path').addPath(__dirname) // eslint-disable-line import/no-unresolved
-
 const express = require('express')
 const {
   loggers: {logger, expressLogger},
@@ -8,10 +6,12 @@ const {
 const compression = require('compression')
 const bodyParser = require('body-parser')
 const expressStatusMonitor = require('express-status-monitor')
+const io = require('socket.io')
+const socketioJwt = require('socketio-jwt')
 
 const config = require('./app/config')
-
 const router = require('./router')
+const wsRouter = require('./wsRouter')
 
 const app = express()
 
@@ -26,4 +26,17 @@ app.use(errorHandler)
 
 const server = app.listen(config.port, () => {
   logger.info({binding: server.address()}, 'http server started')
+
+  const socketio = io(server)
+
+  socketio.use(socketioJwt.authorize({
+    secret: config.jwtSecret,
+    handshake: true,
+    credentialsRequired: false,
+  }))
+
+  socketio.sockets.on('connection', (socket) => {
+    logger.info(`hello ${socket.decoded_token.userId}!`)
+    wsRouter(socket)
+  })
 })
