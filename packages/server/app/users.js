@@ -15,9 +15,8 @@ const hashPassword = async (password) => {
   return hash
 }
 
-const comparePassword = async (candidatePassword, hashedPassword) => {
-  return bcrypt.compare(candidatePassword, hashedPassword)
-}
+const comparePassword = async (candidatePassword, hashedPassword) =>
+  bcrypt.compare(candidatePassword, hashedPassword)
 
 const redis = new Redis()
 
