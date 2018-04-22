@@ -35,9 +35,9 @@ const validate = {
 const logout = () => {
   vlog.warn('logging out - removing localStorage and ws connection');
   ['token', 'profile'].forEach(removeFromStorage)
-  try {
+  if (socket) {
     socket.disconnect()
-  } catch (e) {}
+  }
   socket = null
 }
 
@@ -47,16 +47,25 @@ const validateTokenExpiration = ({code}) => {
   }
 }
 
-const authenticationAction = (path, onSuccess) => async function authAction({
+const authenticationAction = (
+  path,
+  {
+    handleAuthData = true,
+    onSuccess = () => {},
+  } = {}
+) => async function authAction({
   username,
   password,
 }) {
   try {
-    await server.post(path, {
+    const authData = await server.post(path, {
       username: `${username}`,
       password: `${password}`,
-    }).then(handleAuthenticationRequest)
-      .then(onSuccess || (() => {}))
+    })
+    if (handleAuthData) {
+      handleAuthenticationRequest(authData)
+    }
+    onSuccess()
   } catch (e) {
     vlog.error(get(e, 'response.message') || e)
   }
@@ -85,11 +94,11 @@ const connectToWebsocket = () => {
 const commands = [
   {
     command: 'signup <username> <password>',
-    action: authenticationAction('/signup'),
+    action: authenticationAction('/signup', {handleAuthData: false}),
   },
   {
     command: 'login <username> <password>',
-    action: authenticationAction('/login', connectToWebsocket),
+    action: authenticationAction('/login', {onSuccess: connectToWebsocket}),
   },
   {
     command: 'logout', action: logout,
