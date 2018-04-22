@@ -4,35 +4,38 @@ const {
 
 const users = require('./app/users')
 
-const tryLogin = (username) => {
-  const user = users.findUser(username)
-
-  if (!user) {
+const tryLogin = async (username) => {
+  if (!await users.userExists(username)) {
     logger.error(`User ${username} connected to WS but client is not registed`)
     return false
   }
+  const user = await users.findUser(username)
   if (user.loggedIn) {
     logger.warn(`User ${username} connected to WS when already connected`)
   }
-  user.loggedIn = true
+  await users.updateUser(username, {loggedIn: true})
   return true
 }
 
-const onDisconnection = username => () => {
-  const user = users.findUser(username)
-  if (!user) {
-    logger.error(`User ${username} disconnected from WS when not registed`)
+const onDisconnection = username => async () => {
+  try {
+    if (!await users.userExists(username)) {
+      logger.error(`User ${username} disconnected from WS when not registed`)
+    }
+    const user = await users.findUser(username)
+    if (!user.loggedIn) {
+      logger.error(`User ${username} disconnected from WS when not logged in`)
+    }
+    await users.updateUser(username, {loggedIn: false})
+  } catch (err) {
+    logger.error({err}, 'socket disconnection error')
   }
-  if (!user.loggedIn) {
-    logger.error(`User ${username} disconnected from WS when not logged in`)
-  }
-  user.loggedIn = false
 }
 
 const router = (namespace) => {
-  namespace.on('connection', (socket) => {
+  namespace.on('connection', async (socket) => {
     const {decoded_token: {userId: username}} = socket
-    if (!tryLogin(username)) {
+    if (!await tryLogin(username)) {
       socket.disconnect(true)
       return
     }

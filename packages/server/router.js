@@ -18,6 +18,7 @@ const secure = jwtSecure({
 
 router.use(jwtRequest(config.jwtSecret))
 
+
 router.post(
   '/signup',
   _(({body: {username, password}}) => auth.signup({username, password}))
@@ -38,6 +39,12 @@ router.get(
   '/users',
   secure,
   _(() => users.allUsers())
+)
+
+router.get(
+  '/users/:username',
+  secure,
+  _(({params: {username}}) => users.findUser(username))
 )
 
 module.exports = router

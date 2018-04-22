@@ -6,12 +6,14 @@
   "scripts": {
     "lint:fix": "prettier-eslint --write \"src/**/*.js\" && eslint src",
     "start": "node . | pino",
+    "start:debug": "node --inspect . | pino",
     "prod": "nodemon -e js . | pino",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@sindresorhus/is": "^0.8.0",
     "@welldone-software/node-toolbelt": "^1.4.0",
     "app-module-path": "^2.2.0",
     "axios": "^0.18.0",
@@ -20,6 +22,7 @@
     "compression": "^1.7.2",
     "express": "^4.16.3",
     "express-status-monitor": "^1.0.1",
+    "ioredis": "^3.2.2",
     "lodash": "^4.17.5",
     "socket.io": "^2.1.0",
     "socketio-jwt": "^4.5.0",
@@ -27,6 +30,7 @@
     "validator": "^9.4.1"
   },
   "devDependencies": {
+    "@types/ioredis": "^3.2.7",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.11.0",
     "eslint-plugin-node": "^6.0.1",
