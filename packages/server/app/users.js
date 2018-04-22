@@ -4,9 +4,20 @@ const {
 const is = require('@sindresorhus/is')
 const Redis = require('ioredis')
 const {omit} = require('lodash')
+const bcrypt = require('bcrypt')
 
 const profileFieldsToOmit = ['password']
 const sanitizeUserProfile = profile => omit(profile, profileFieldsToOmit)
+
+const hashPassword = async (password) => {
+  const salt = await bcrypt.genSalt(10)
+  const hash = await bcrypt.hash(password, salt)
+  return hash
+}
+
+const comparePassword = async (candidatePassword, hashedPassword) => {
+  return bcrypt.compare(candidatePassword, hashedPassword)
+}
 
 const redis = new Redis()
 
@@ -22,7 +33,12 @@ const createUser = async ({username, password}) => {
   }
 
   const key = userKey(username)
-  const userData = {username, password, loggedIn: false}
+  const userData = {
+    username,
+    password: await hashPassword(password),
+    loggedIn: false,
+  }
+
   await redis.hmset(key, userData)
   return redis.hgetall(key)
 }
@@ -38,7 +54,8 @@ const updateUser = async (username, update) => {
     throw new NotFoundError('usernameNotFound', {username})
   }
 
-  return redis.hmset(userKey(username), update)
+  const password = update.password ? {password: await hashPassword(update.password)} : {}
+  return redis.hmset(userKey(username), {...update, ...password})
 }
 
 module.exports = {
@@ -48,4 +65,5 @@ module.exports = {
   allUsers,
   userExists,
   updateUser,
+  comparePassword,
 }

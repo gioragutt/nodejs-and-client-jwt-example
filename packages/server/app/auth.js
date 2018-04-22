@@ -23,7 +23,7 @@ const login = async ({username, password}) => {
   }
 
   const user = await users.findUser(username)
-  if (user.password !== password) {
+  if (!await users.comparePassword(password, user.password)) {
     logger.warn({username}, 'incorrect password')
     throw invalidUsernameOrPassword()
   }
