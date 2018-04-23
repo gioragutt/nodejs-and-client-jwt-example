@@ -13,7 +13,7 @@ const tryLogin = async (username) => {
   if (user.loggedIn) {
     logger.warn(`User ${username} connected to WS when already connected`)
   }
-  await users.updateUser(username, {loggedIn: true})
+  await users.login(username)
   return true
 }
 
@@ -26,7 +26,7 @@ const onDisconnection = username => async () => {
     if (!user.loggedIn) {
       logger.error(`User ${username} disconnected from WS when not logged in`)
     }
-    await users.updateUser(username, {loggedIn: false})
+    await users.logout(username)
   } catch (err) {
     logger.error({err}, 'socket disconnection error')
   }

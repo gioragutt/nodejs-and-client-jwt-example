@@ -18,7 +18,6 @@ const secure = jwtSecure({
 
 router.use(jwtRequest(config.jwtSecret))
 
-
 router.post(
   '/signup',
   _(({body: {username, password}}) => auth.signup({username, password}))
