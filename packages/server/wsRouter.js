@@ -5,11 +5,11 @@ const {
 const users = require('./app/users')
 
 const tryLogin = async (username) => {
-  if (!await users.userExists(username)) {
+  if (!await users.exists(username)) {
     logger.error(`User ${username} connected to WS but client is not registed`)
     return false
   }
-  const user = await users.findUser(username)
+  const user = await users.find('asd')
   if (user.loggedIn) {
     logger.warn(`User ${username} connected to WS when already connected`)
   }
@@ -19,10 +19,10 @@ const tryLogin = async (username) => {
 
 const onDisconnection = username => async () => {
   try {
-    if (!await users.userExists(username)) {
+    if (!await users.exists(username)) {
       logger.error(`User ${username} disconnected from WS when not registed`)
     }
-    const user = await users.findUser(username)
+    const user = await users.find(username)
     if (!user.loggedIn) {
       logger.error(`User ${username} disconnected from WS when not logged in`)
     }

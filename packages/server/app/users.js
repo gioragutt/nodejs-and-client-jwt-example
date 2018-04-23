@@ -25,11 +25,11 @@ const USER_IDS_KEY = 'userIds'
 
 const userKey = id => `${USER_PREFIX}${id}`
 
-const findUser = async username => redis.hgetall(userKey(username))
-const userExists = async username => (await redis.exists(userKey(username))) > 0
+const find = async username => redis.hgetall(userKey(username))
+const exists = async username => (await redis.exists(userKey(username))) > 0
 
-const createUser = async ({username, password}) => {
-  if (await userExists(username)) {
+const create = async ({username, password}) => {
+  if (await exists(username)) {
     throw new AlreadyExistsError('usernameAlreadyExists')
   }
 
@@ -49,28 +49,28 @@ const createUser = async ({username, password}) => {
   return sanitizeUserProfile(user)
 }
 
-const allUsers = async () => {
+const all = async () => {
   const userKeys = await redis.smembers(USER_IDS_KEY)
   const users = await redis.multi(userKeys.map(key => ['hgetall', key])).exec()
   return users.map(([, user]) => sanitizeUserProfile(user))
 }
 
-const updateUser = async (username, update) => {
-  if (!await userExists(username)) {
+const update = async (username, fields) => {
+  if (!await exists(username)) {
     throw new NotFoundError('usernameNotFound', {username})
   }
-  return redis.hmset(userKey(username), update)
+  return redis.hmset(userKey(username), fields)
 }
 
-const login = async username => updateUser(username, {loggedIn: true})
-const logout = async username => updateUser(username, {loggedIn: false})
+const login = async username => update(username, {loggedIn: true})
+const logout = async username => update(username, {loggedIn: false})
 
 module.exports = {
   sanitizeUserProfile,
-  createUser,
-  findUser,
-  allUsers,
-  userExists,
+  create,
+  find,
+  all,
+  exists,
   comparePassword,
   login,
   logout,

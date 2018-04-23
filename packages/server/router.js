@@ -11,7 +11,7 @@ const users = require('./app/users')
 const router = new Router()
 const secure = jwtSecure({
   findUser: ({id}) => {
-    const user = users.findUser(id)
+    const user = users.find(id)
     return user && {dataValues: user}
   },
 })
@@ -37,13 +37,13 @@ router.get(
 router.get(
   '/users',
   secure,
-  _(() => users.allUsers())
+  _(() => users.all())
 )
 
 router.get(
   '/users/:username',
   secure,
-  _(({params: {username}}) => users.findUser(username))
+  _(({params: {username}}) => users.find(username))
 )
 
 module.exports = router

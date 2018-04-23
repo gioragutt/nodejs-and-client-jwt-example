@@ -17,12 +17,12 @@ const makeTokenAndProfile = async ({username, ...rest}) => ({
 const invalidUsernameOrPassword = () => new NotFoundError('invalidUsernameOrPassword')
 
 const login = async ({username, password}) => {
-  if (!await users.userExists(username)) {
+  if (!await users.exists(username)) {
     logger.warn({username}, 'invalid username')
     throw invalidUsernameOrPassword()
   }
 
-  const user = await users.findUser(username)
+  const user = await users.find(username)
   if (!await users.comparePassword(password, user.password)) {
     logger.warn({username}, 'incorrect password')
     throw invalidUsernameOrPassword()
@@ -40,7 +40,7 @@ const signup = async ({username, password}) => {
     throw new InvalidArgumentError('weakPassword')
   }
 
-  const user = await users.createUser({username, password})
+  const user = await users.create({username, password})
   return makeTokenAndProfile(user)
 }
 
