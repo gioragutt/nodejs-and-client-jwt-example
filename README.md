@@ -1,3 +1,16 @@
+## Docker
+
+* run redis:
+
+```bash
+docker run --name redis -p 6379:6379 -d redis
+```
+
+* open redis-cli:  
+```bash
+docker run -it --link redis:redis --rm redis redis-cli -h redis -p 6379
+```
+
 ## Commit Guidlines
 
 Push commits only to a branch, and open a pull-request on them.  
