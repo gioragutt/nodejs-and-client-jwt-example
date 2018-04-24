@@ -26,7 +26,7 @@ const USER_IDS_KEY = 'userIds'
 const userKey = id => `${USER_PREFIX}${id}`
 
 const find = async username => redis.hgetall(userKey(username))
-const exists = async username => (await redis.exists(userKey(username))) > 0
+const exists = async username => (await redis.exists(userKey(username))) === 1
 
 const create = async ({username, password}) => {
   if (await exists(username)) {
