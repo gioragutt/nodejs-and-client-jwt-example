@@ -1,5 +1,5 @@
 const {
-  exceptions: {InvalidArgumentError, NotFoundError},
+  exceptions: {InvalidArgumentError, AuthenticationError},
   loggers: {logger},
   jwt: {generateToken},
 } = require('@welldone-software/node-toolbelt')
@@ -14,7 +14,7 @@ const makeTokenAndProfile = async ({username, ...rest}) => ({
   profile: {username, ...users.sanitizeUserProfile(rest)},
 })
 
-const invalidUsernameOrPassword = () => new NotFoundError('invalidUsernameOrPassword')
+const invalidUsernameOrPassword = () => new AuthenticationError('invalidUsernameOrPassword')
 
 const login = async ({username, password}) => {
   if (!await users.exists(username)) {
