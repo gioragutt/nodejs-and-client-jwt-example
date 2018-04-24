@@ -4,6 +4,7 @@ const {
   expressHelpers: {errorHandler},
 } = require('@welldone-software/node-toolbelt')
 const compression = require('compression')
+const cors = require('cors')
 const bodyParser = require('body-parser')
 const expressStatusMonitor = require('express-status-monitor')
 const io = require('socket.io')
@@ -15,6 +16,7 @@ const wsRouter = require('./wsRouter')
 
 const app = express()
 
+app.use(cors())
 app.use(compression())
 app.use(bodyParser.json())
 app.use(expressLogger())
