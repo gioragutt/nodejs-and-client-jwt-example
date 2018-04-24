@@ -43,12 +43,9 @@ const router = (namespace) => {
     socket.on('disconnect', onDisconnection(username))
     logger.info(`User ${username} connected!`)
 
-    socket.on('message', (message, cb) => {
+    socket.on('message', (message) => {
       logger.info({username, message}, '[WS] message')
-
-      if (cb) {
-        cb(`response to: ${message}`)
-      }
+      socket.broadcast.emit('message', {username, message})
     })
   })
 }
