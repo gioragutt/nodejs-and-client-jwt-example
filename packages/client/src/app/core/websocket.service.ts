@@ -8,6 +8,7 @@ import { map } from 'rxjs/operators/map';
 import { tap } from 'rxjs/operators/tap';
 import { distinctUntilChanged } from 'rxjs/operators/distinctUntilChanged';
 import { environment } from '@env/environment';
+import { SubjectMap } from '@app/utils';
 
 export interface SocketStatus {
   connected: boolean;
@@ -17,27 +18,35 @@ export interface SocketStatus {
 
 @Injectable()
 export class WebsocketService {
-  private status$ = new BehaviorSubject<SocketStatus>({ connected: false });
+  private status = new BehaviorSubject<SocketStatus>({ connected: false });
   private socket: SocketIOClient.Socket;
+  private subjects = new SubjectMap();
+  private _statusChanged: Observable<boolean>;
+
+  get statusChanged$(): Observable<boolean> {
+    return this._statusChanged;
+  }
 
   get currentStatus(): SocketStatus {
-    return this.status$.getValue();
+    return this.status.getValue();
   }
 
   constructor(private auth: AuthService) {
+    this._statusChanged = this.status.pipe(
+      map(status => status.connected),
+      distinctUntilChanged(),
+    );
+
     auth.profile().pipe(
-      tap(profile => console.log('test me:', {profile})),
       map(profile => profile !== null),
       distinctUntilChanged(),
     ).subscribe(loggedIn => {
       if (loggedIn) {
         this.connect();
-        console.log('socket -> connect');
       } else {
         this.disconnect();
-        console.log('socket -> disconnect');
       }
-    });
+    })
   }
 
   disconnect(): void {
@@ -50,15 +59,21 @@ export class WebsocketService {
     if (this.auth.loggedIn && !this.currentStatus.connected) {
       this.createSocket();
     }
-    return this.status$.asObservable();
+    return this.status.asObservable();
   }
 
-  join<T>(room: string): void {
-    this.socket.emit('join_room', room);
+  emit(event: string, ...args: any[]): void {
+    this.socket.emit(event, ...args);
+  }
+
+  on<T>(event: string): Observable<T> {
+    const subject = this.subjects.get<T>(event);
+    this.socket.on(event, (value: T) => subject.next(value));
+    return subject.asObservable();
   }
 
   private updateStatus(update: Partial<SocketStatus>): void {
-    this.status$.next({ ...this.currentStatus, ...update });
+    this.status.next({ ...this.currentStatus, ...update });
   }
 
   private createSocket(): void {

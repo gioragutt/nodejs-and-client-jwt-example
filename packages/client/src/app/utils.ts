@@ -1,3 +1,5 @@
+import { Subject } from "rxjs/Subject";
+
 export const setStorage = (key: string, value: any) =>
   localStorage.setItem(key, JSON.stringify(value));
 
@@ -12,3 +14,20 @@ export const getStorage = <T>(key: string): T | null => {
     return null;
   }
 };
+
+export class SubjectMap {
+  private subjects = new Map<string, Subject<any>>();
+  get<T>(key: string): Subject<T> {
+    if (!this.subjects.has(key)) {
+      this.subjects.set(key, new Subject<T>());
+    }
+    return this.subjects.get(key) as Subject<T>;
+  }
+}
+
+// const callCompose = (f, g) => (...args) => f(g(...args))
+// export const compose = (...fns) => fns.reduce(callCompose)
+// export const pipe = (...fns) => fns.reduceRight(callCompose)
+
+export const compose = (...fns) => fns.reduce((f, g) => (...args) => f(g(...args)));
+export const pipe = (...fns) => compose.apply(compose, fns.reverse());

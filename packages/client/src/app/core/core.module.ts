@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { AuthService } from '@core/auth.service';
 import { WebsocketService } from '@core/websocket.service';
+import { LobbiesService } from '@core/lobbies.service';
 
 @NgModule({
   imports: [
@@ -16,6 +17,7 @@ export class CoreModule {
       providers: [
         AuthService,
         WebsocketService,
+        LobbiesService,
       ],
     };
   }

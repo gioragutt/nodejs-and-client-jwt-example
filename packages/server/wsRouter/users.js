@@ -1,8 +1,6 @@
-const {
-  loggers: {logger},
-} = require('@welldone-software/node-toolbelt')
+const {loggers: {logger}} = require('@welldone-software/node-toolbelt')
 
-const users = require('./app/users')
+const users = require('app/users')
 
 const tryLogin = async (username) => {
   if (!await users.exists(username)) {
@@ -32,22 +30,7 @@ const onDisconnection = username => async () => {
   }
 }
 
-const router = (namespace) => {
-  namespace.on('connection', async (socket) => {
-    const {decoded_token: {userId: username}} = socket
-    if (!await tryLogin(username)) {
-      socket.disconnect(true)
-      return
-    }
-
-    socket.on('disconnect', onDisconnection(username))
-    logger.info(`User ${username} connected!`)
-
-    socket.on('message', (message) => {
-      logger.info({username, message}, '[WS] message')
-      socket.broadcast.emit('message', {username, message})
-    })
-  })
+module.exports = {
+  tryLogin,
+  onDisconnection,
 }
-
-module.exports = router

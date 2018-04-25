@@ -1,15 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { LobbiesService } from '@core/lobbies.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent {
+  lobbyName = '';
 
-  constructor() { }
+  constructor(public lobbies: LobbiesService) {
+  }
 
-  ngOnInit() {
+  createLobby() {
+    this.lobbies.create(this.lobbyName)
+    this.lobbyName = ''
   }
 
 }

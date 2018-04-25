@@ -1,20 +1,25 @@
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+
 import { AppComponent } from '@app/app.component';
 import { AuthModule } from '@app/auth';
-import { AppRoutes } from './app.routes';
 import { CoreModule } from '@app/core';
-import { HomeComponent } from './home/home.component';
-import { SharedModule } from '@shared/shared.module';
+import { SharedModule } from '@app/shared';
+import { HomeModule } from '@app/home';
+
+import { AppRoutes } from './app.routes';
+import { ToolbarComponent } from './toolbar/toolbar.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
+    ToolbarComponent,
   ],
   imports: [
     SharedModule,
     AuthModule,
     AppRoutes,
+    HomeModule,
     CoreModule.forRoot(),
   ],
   providers: [],

@@ -43,12 +43,10 @@ export class AuthService {
   }
 
   login(username: string, password: string): Observable<Profile> {
-    console.log({ username, password }, 'in login');
     return this.http.post<AuthResponse>(`${env.apiBaseUrl}/login`, { username, password }).pipe(
       tap(res => {
         setStorage(env.jwtStorageKey, res.token);
         setStorage(env.profileStorageKey, res.profile);
-        console.log('asdasd');
         this.profile$.next(res.profile);
       }),
       switchMap(() => this.profile()),
