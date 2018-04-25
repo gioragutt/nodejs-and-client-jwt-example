@@ -1,12 +1,12 @@
 const {Router} = require('express')
 const {
   jwt: {jwtRequest, jwtSecure},
-  // loggers: {logger, expressLogger},
   expressHelpers: {createApiEndpoint: _},
 } = require('@welldone-software/node-toolbelt')
-const auth = require('./app/auth')
-const config = require('./app/config')
-const users = require('./app/users')
+const auth = require('app/auth')
+const config = require('app/config')
+const users = require('app/users')
+const lobbies = require('app/lobbies')
 
 const router = new Router()
 const secure = jwtSecure({
@@ -44,6 +44,11 @@ router.get(
   '/users/:username',
   secure,
   _(({params: {username}}) => users.find(username))
+)
+
+router.get(
+  '/lobbies',
+  _(() => lobbies.all())
 )
 
 module.exports = router

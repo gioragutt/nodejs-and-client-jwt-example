@@ -1,0 +1,10 @@
+<mat-toolbar color="primary">
+  <div class="toolbar-spacer"></div>
+  <mat-icon
+    [color]="(ws.statusChanged$ | async) ? 'accent' : 'warn'"
+    [matTooltip]="(ws.statusChanged$ | async) ? 'WS Connected' : 'WS Disonnected'"
+  >
+    import_export
+  </mat-icon>
+  <app-profile></app-profile>
+</mat-toolbar>

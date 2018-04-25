@@ -8,7 +8,6 @@ const validator = require('validator')
 const config = require('./config')
 const users = require('./users')
 
-
 const makeTokenAndProfile = async ({username, ...rest}) => ({
   token: await generateToken(config.jwtSecret, {userId: username, verified: true}, '24h'),
   profile: {username, ...users.sanitizeUserProfile(rest)},

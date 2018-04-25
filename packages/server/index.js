@@ -1,3 +1,5 @@
+require('app-module-path').addPath(__dirname)
+
 const express = require('express')
 const {
   loggers: {logger, expressLogger},
@@ -10,9 +12,9 @@ const expressStatusMonitor = require('express-status-monitor')
 const io = require('socket.io')
 const socketioJwt = require('socketio-jwt')
 
-const config = require('./app/config')
-const router = require('./router')
-const wsRouter = require('./wsRouter')
+const config = require('app/config')
+const router = require('router')
+const wsRouter = require('wsRouter')
 
 const app = express()
 

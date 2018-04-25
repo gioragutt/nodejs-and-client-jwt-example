@@ -1,0 +1,13 @@
+<p>
+  <button mat-icon-button (click)="joinOrLeaveClicked()" color="primary">
+    <mat-icon>{{isInLobby ? 'call_end' : 'call'}}</mat-icon>
+  </button>
+  {{lobby.id}}
+  <mat-chip-list class="users">
+    <mat-chip *ngFor="let user of lobby.users"
+              selected="true"
+              [color]="user === username ? 'accent' : 'default'">
+      {{user}}
+    </mat-chip>
+  </mat-chip-list>
+</p>
