@@ -19,6 +19,6 @@ module.exports = (namespace) => {
       socket.broadcast.emit('message', {username, message})
     })
 
-    lobbyRoutes(socket, username)
+    lobbyRoutes(namespace, socket, username)
   })
 }

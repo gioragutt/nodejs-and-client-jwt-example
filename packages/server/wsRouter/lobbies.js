@@ -2,26 +2,33 @@ const {loggers: {logger}} = require('@welldone-software/node-toolbelt')
 
 const lobbies = require('app/lobbies')
 
-module.exports = (socket, username) => {
-  socket.on('create_lobby', async (id) => {
+module.exports = (namespace, socket, username) => {
+  socket.on('create_lobby', async ({id}) => {
     try {
       const lobby = await lobbies.create({id})
-      socket.emit('new_lobby_created', lobby)
+      namespace.emit('new_lobby_created', lobby)
       logger.info({username, id}, '[WS] new_lobby_created')
     } catch (e) {
       logger.error({username, id}, '[WS] lobby_already_exists')
     }
   })
 
-  socket.on('join_lobby', async (id, onJoin) => {
+  socket.on('join_lobby', async ({id}) => {
+    logger.info({id, username}, '[WS] join_lobby')
+    socket.join(id)
     const lobby = await lobbies.join(id, username)
-    socket.broadcast.emit('user_joined_lobby', {id, username})
-    onJoin(lobby)
+    namespace.emit('user_joined_lobby', {lobby, username})
   })
 
-  socket.on('leave_lobby', async (id, onLeave) => {
+  socket.on('leave_lobby', async ({id}) => {
+    logger.info({id, username}, '[WS] leave_lobby')
+    socket.leave(id)
     const lobby = await lobbies.leave(id, username)
-    socket.broadcast.emit('user_left_lobby', {id, username})
-    onLeave(lobby)
+    namespace.emit('user_left_lobby', {lobby, username})
+  })
+
+  socket.on('message_to_lobby', ({id, message}) => {
+    logger.info({username, id, message}, '[WS] message_to_lobby')
+    socket.to(id).emit('message_to_lobby', {lobby: id, username, message})
   })
 }
