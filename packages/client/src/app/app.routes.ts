@@ -5,11 +5,17 @@ import { HomeComponent } from '@app/home/home.component';
 const routes: Routes = [
   {path: 'login', component: AuthComponent},
   {
-    path: '',
-    component: HomeComponent,
+    path: 'lobbies',
+    
     canActivate: [LoggedInGuard],
+    children: [
+      { path: '', component: HomeComponent }
+      // {
+      //   path: ':id', component: LobbyComponent
+      // }
+    ]
   },
-  {path: '**', redirectTo: '/'},
+  {path: '**', redirectTo: '/lobbies'},
 ];
 
 export const AppRoutes = RouterModule.forRoot(routes);

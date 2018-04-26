@@ -18,10 +18,13 @@ export const getStorage = <T>(key: string): T | null => {
 export class SubjectMap {
   private subjects = new Map<string, Subject<any>>();
   get<T>(key: string): Subject<T> {
-    if (!this.subjects.has(key)) {
+    if (!this.has(key)) {
       this.subjects.set(key, new Subject<T>());
     }
     return this.subjects.get(key) as Subject<T>;
+  }
+  has(key: string): boolean {
+    return this.subjects.has(key);
   }
 }
 

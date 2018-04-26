@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { connect } from 'socket.io-client';
 import { AuthService } from '@core/auth.service';
+
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
-import { map } from 'rxjs/operators/map';
-import { tap } from 'rxjs/operators/tap';
-import { distinctUntilChanged } from 'rxjs/operators/distinctUntilChanged';
+import { defer } from 'rxjs/observable/defer';
+import { map, tap, distinctUntilChanged, delayWhen, filter, first, switchMap } from 'rxjs/operators';
+
 import { environment } from '@env/environment';
 import { SubjectMap } from '@app/utils';
 
@@ -22,6 +23,7 @@ export class WebsocketService {
   private socket: SocketIOClient.Socket;
   private subjects = new SubjectMap();
   private _statusChanged: Observable<boolean>;
+  private _firstConnection: Observable<{}>;
 
   get statusChanged$(): Observable<boolean> {
     return this._statusChanged;
@@ -31,10 +33,19 @@ export class WebsocketService {
     return this.status.getValue();
   }
 
+  get firstConnection$(): Observable<{}> {
+    return this._firstConnection;
+  }
+
   constructor(private auth: AuthService) {
     this._statusChanged = this.status.pipe(
       map(status => status.connected),
       distinctUntilChanged(),
+    );
+
+    this._firstConnection = this._statusChanged.pipe(
+      filter(connected => connected),
+      first()
     );
 
     auth.profile().pipe(
@@ -67,9 +78,17 @@ export class WebsocketService {
   }
 
   on<T>(event: string): Observable<T> {
-    const subject = this.subjects.get<T>(event);
-    this.socket.on(event, (value: T) => subject.next(value));
-    return subject.asObservable();
+    if (this.subjects.has(event)) {
+      return this.subjects.get<T>(event).asObservable();
+    }
+
+    return this.firstConnection$.pipe(
+      switchMap(() => {
+        const subject = this.subjects.get<T>(event);
+        this.socket.on(event, (value: T) => subject.next(value));
+        return  this.subjects.get<T>(event).asObservable()
+      })
+    )
   }
 
   private updateStatus(update: Partial<SocketStatus>): void {

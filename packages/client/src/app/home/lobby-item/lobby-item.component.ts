@@ -11,6 +11,11 @@ export class LobbyItemComponent {
   @Input() lobby: Lobby;
   @Input() username: string;
   @Output() joinOrLeave = new EventEmitter<'join' | 'leave'>();
+  messageContent: string;
+
+  get canSendMessage(): boolean {
+    return this.messageContent && this.messageContent.trim().length > 0
+  }
 
   get isInLobby(): boolean {
     return this.lobby.users.includes(this.username)
@@ -18,7 +23,12 @@ export class LobbyItemComponent {
 
   constructor(private lobbies: LobbiesService, private auth: AuthService) { }
 
-  joinOrLeaveClicked() {
+  sendMessage(): void {
+    this.lobbies.message(this.lobby.id, this.messageContent)
+    this.messageContent = ''
+  }
+
+  joinOrLeaveClicked(): void {
     this.joinOrLeave.emit(this.isInLobby ? 'leave' : 'join')
   }
 }

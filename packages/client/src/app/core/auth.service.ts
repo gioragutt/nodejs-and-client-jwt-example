@@ -27,7 +27,6 @@ export class AuthService {
   private profile$ = new BehaviorSubject<Profile>(this.currentProfile);
 
   constructor(private http: HttpClient, private router: Router) {
-    this.profile$.subscribe(profile => console.log('ad matay', {profile}));
   }
 
   profile(): Observable<Profile> {
