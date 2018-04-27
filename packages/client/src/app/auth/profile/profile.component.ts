@@ -8,11 +8,7 @@ import { Observable } from 'rxjs/Observable';
   styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent {
-  profile$: Observable<Profile | null> = null;
-
-  constructor(private auth: AuthService) {
-    this.profile$ = auth.profile();
-  }
+  constructor(public auth: AuthService) {}
 
   logout(): void {
     this.auth.logout().subscribe();

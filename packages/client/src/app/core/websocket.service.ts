@@ -48,7 +48,7 @@ export class WebsocketService {
       first()
     );
 
-    auth.profile().pipe(
+    auth.profile$.pipe(
       map(profile => profile !== null),
       distinctUntilChanged(),
     ).subscribe(loggedIn => {
@@ -86,7 +86,8 @@ export class WebsocketService {
       switchMap(() => {
         const subject = this.subjects.get<T>(event);
         this.socket.on(event, (value: T) => subject.next(value));
-        return  this.subjects.get<T>(event).asObservable()
+        subject.pipe(tap((...args) => console.log('[WS] received event', {event, args})))
+        return subject.asObservable()
       })
     )
   }

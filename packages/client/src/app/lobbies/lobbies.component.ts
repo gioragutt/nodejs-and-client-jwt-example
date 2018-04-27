@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
-import { LobbiesService } from '@core/lobbies.service';
+import { LobbiesService } from '@core/lobbies';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  selector: 'app-lobbies',
+  templateUrl: './lobbies.component.html',
+  styleUrls: ['./lobbies.component.scss']
 })
-export class HomeComponent {
+export class LobbiesComponent {
   lobbyName = '';
 
   constructor(public lobbies: LobbiesService) {

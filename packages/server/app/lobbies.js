@@ -12,6 +12,7 @@ const LOBBY_PREFIX = 'lobby:'
 const LOBBY_IDS_KEY = 'lobbyIds'
 const lobbyKey = id => `${LOBBY_PREFIX}${id}`
 const lobbyUsersKey = id => `${lobbyKey(id)}:users`
+const lobbyEventsKey = id => `${lobbyKey(id)}:events`
 
 const deleteLobby = async ({id}) => {
   logger.info({id}, 'delete')
@@ -20,6 +21,7 @@ const deleteLobby = async ({id}) => {
     ['srem', LOBBY_IDS_KEY, id],
     ['del', lobbyKey(id)],
     ['del', lobbyUsersKey(id)],
+    ['del', lobbyEventsKey(id)],
   ]).exec()
 }
 
@@ -33,7 +35,20 @@ const find = async (id) => {
   return {
     id,
     users: await redis.smembers(lobbyUsersKey(id)),
+    events: await map(redis.zrange(lobbyEventsKey(id), 0, -1), JSON.parse),
   }
+}
+
+const addEvent = async (id, eventName, context = {}) => {
+  const timestamp = Date.now()
+  const event = {
+    id,
+    event: eventName,
+    timestamp,
+    ...context,
+  }
+  await redis.zadd(lobbyEventsKey(id), timestamp, JSON.stringify(event))
+  return event
 }
 
 const create = async ({id}) => {
@@ -43,20 +58,29 @@ const create = async ({id}) => {
 
   logger.info({id}, 'create')
   await redis.sadd(LOBBY_IDS_KEY, id)
+  await addEvent(id, 'create')
   return find(id)
 }
 
-const join = async (id, userId) => {
-  logger.info({id, userId}, 'join')
-  await redis.sadd(lobbyUsersKey(id), userId)
+const join = async (id, username) => {
+  logger.info({id, username}, 'join')
+  await redis.sadd(lobbyUsersKey(id), username)
+  await addEvent(id, 'join', {username})
   return find(id)
 }
 
-const leave = async (id, userId) => {
-  logger.info({id, userId}, 'leave')
-  await redis.srem(lobbyUsersKey(id), userId)
+const leave = async (id, username) => {
+  logger.info({id, username}, 'leave')
+  await redis.srem(lobbyUsersKey(id), username)
+  await addEvent(id, 'leave', {username})
   return find(id)
 }
+
+const userInLobby = async (id, userId) =>
+  redis.sismember(lobbyUsersKey(id), userId)
+
+const message = async (id, username, content) =>
+  addEvent(id, 'message', {username, message: content})
 
 const all = async () => {
   const lobbyIds = await redis.smembers(LOBBY_IDS_KEY)
@@ -72,4 +96,6 @@ module.exports = {
   all,
   exists,
   find,
+  userInLobby,
+  message,
 }

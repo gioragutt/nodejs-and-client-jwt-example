@@ -2,7 +2,19 @@ const {loggers: {logger}} = require('@welldone-software/node-toolbelt')
 
 const lobbies = require('app/lobbies')
 
-module.exports = (namespace, socket, username) => {
+const joinUserToConnectedLobbies = async (socket, username) => {
+  const allLobbies = await lobbies.all()
+  await Promise.all(allLobbies.map(async ({id}) => {
+    if (await lobbies.userInLobby(id, username)) {
+      logger.info({id, username}, '[WS] initialization - user is in lobby, joining socket')
+      socket.join(id)
+    }
+  }))
+}
+
+module.exports = async (namespace, socket, username) => {
+  await joinUserToConnectedLobbies(socket, username)
+
   socket.on('create_lobby', async ({id}) => {
     try {
       const lobby = await lobbies.create({id})
@@ -27,8 +39,14 @@ module.exports = (namespace, socket, username) => {
     namespace.emit('user_left_lobby', {lobby, username})
   })
 
-  socket.on('message_to_lobby', ({id, message}) => {
+  socket.on('message_to_lobby', async ({id, message}) => {
+    if (!await lobbies.userInLobby(id, username)) {
+      logger.warn({username, id, message}, '[WS] user tried to message lobby he\'s not in')
+      return
+    }
+
+    const event = await lobbies.message(id, username, message)
     logger.info({username, id, message}, '[WS] message_to_lobby')
-    socket.to(id).emit('message_to_lobby', {lobby: id, username, message})
+    namespace.to(id).emit('message_to_lobby', {id, ...event})
   })
 }

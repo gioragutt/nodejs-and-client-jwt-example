@@ -1,4 +1,4 @@
-<div>
+<div *ngIf="lobby">
   <button mat-icon-button (click)="joinOrLeaveClicked()" color="primary">
     <mat-icon>{{isInLobby ? 'call_end' : 'call'}}</mat-icon>
   </button>
@@ -20,4 +20,7 @@
       {{user}}
     </mat-chip>
   </mat-chip-list>
+
+  <h1>Events</h1>
+  <app-lobby-events-list [lobby]="lobby"></app-lobby-events-list>
 </div>

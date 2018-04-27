@@ -1,14 +1,15 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from '@app/app.component';
 import { AuthModule } from '@app/auth';
 import { CoreModule } from '@app/core';
 import { SharedModule } from '@app/shared';
-import { HomeModule } from '@app/home';
 
 import { AppRoutes } from './app.routes';
 import { ToolbarComponent } from './toolbar/toolbar.component';
+import { LobbiesModule } from '@app/lobbies';
 
 @NgModule({
   declarations: [
@@ -16,10 +17,11 @@ import { ToolbarComponent } from './toolbar/toolbar.component';
     ToolbarComponent,
   ],
   imports: [
+    BrowserAnimationsModule,
     SharedModule,
     AuthModule,
     AppRoutes,
-    HomeModule,
+    LobbiesModule,
     CoreModule.forRoot(),
   ],
   providers: [],

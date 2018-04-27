@@ -24,13 +24,13 @@ export interface AuthResponse {
 
 @Injectable()
 export class AuthService {
-  private profile$ = new BehaviorSubject<Profile>(this.currentProfile);
+  private _profile = new BehaviorSubject<Profile>(this.currentProfile);
 
   constructor(private http: HttpClient, private router: Router) {
   }
 
-  profile(): Observable<Profile> {
-    return this.profile$;
+  get profile$(): Observable<Profile> {
+    return this._profile;
   }
 
   get loggedIn(): boolean {
@@ -46,9 +46,9 @@ export class AuthService {
       tap(res => {
         setStorage(env.jwtStorageKey, res.token);
         setStorage(env.profileStorageKey, res.profile);
-        this.profile$.next(res.profile);
+        this._profile.next(res.profile);
       }),
-      switchMap(() => this.profile()),
+      switchMap(() => this.profile$),
       catchError(e => {
         this.resetAuthData();
         return of(null);
@@ -67,7 +67,7 @@ export class AuthService {
   private resetAuthData(): void {
     setStorage(env.jwtStorageKey, undefined);
     setStorage(env.profileStorageKey, undefined);
-    this.profile$.next(null);
+    this._profile.next(null);
   }
 
   get currentProfile(): Profile {

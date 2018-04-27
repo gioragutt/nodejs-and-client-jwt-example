@@ -1,0 +1,16 @@
+<ul>
+  <li *ngFor="let event of lobby.events" [ngSwitch]="event.event">
+    <p *ngSwitchCase="'create'">
+      <b>{{event.timestamp | date:'mediumTime'}}</b> - Lobby <b>{{lobby.id}}</b> created!
+    </p>
+    <p *ngSwitchCase="'join'">
+      <b>{{event.timestamp | date:'mediumTime'}}</b> - <b>{{event.username}}</b> joined the lobby!
+    </p>
+    <p *ngSwitchCase="'leave'">
+      <b>{{event.timestamp | date:'mediumTime'}}</b> - <b>{{event.username}}</b> left the lobby!
+    </p>
+    <p *ngSwitchCase="'message'">
+      <b>{{event.timestamp | date:'mediumTime'}}</b> - <b>{{event.username}}:</b> {{event.message}}
+    </p>
+  </li>
+</ul>

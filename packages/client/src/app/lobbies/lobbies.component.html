@@ -1,0 +1,29 @@
+<div class="container">
+  <form (ngSubmit)="createLobby()">
+    <mat-form-field>
+      <input matInput placeholder="Create Lobby"
+             [(ngModel)]="lobbyName" name="name">
+      <button mat-button [disabled]="!lobbyName"
+              matSuffix mat-icon-button>
+        <mat-icon>create</mat-icon>
+      </button>
+    </mat-form-field>
+  </form>
+  <nav mat-tab-nav-bar>
+    <mat-tab-group>
+        <mat-tab *ngFor="let lobby of lobbies.lobbies$ | async">
+            <ng-template mat-tab-label>
+              <a mat-tab-link
+                 [routerLink]="[lobby.id]"
+                 routerLinkActive #rla="routerLinkActive"
+              >
+                {{lobby.id}}
+              
+              <mat-icon color="primary">{{lobbies.isInLobby(lobby.id) ? 'done' : 'clear'}}</mat-icon>
+            </a>
+          </ng-template>
+       </mat-tab>
+    </mat-tab-group>
+  </nav>
+  <router-outlet></router-outlet>
+</div>

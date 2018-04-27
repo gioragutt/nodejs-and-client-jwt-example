@@ -1,5 +1,5 @@
 <div>
-  <div *ngIf="profile$ | async as profile; then loggedIn else loggedOut"></div>
+  <div *ngIf="auth.profile$ | async as profile; then loggedIn else loggedOut"></div>
   <ng-template #loggedIn let-profile>
     {{profile.username}}
     <button mat-button color="accent" (click)="logout()">Logout</button>
