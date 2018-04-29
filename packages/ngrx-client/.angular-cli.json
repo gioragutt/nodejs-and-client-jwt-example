@@ -75,6 +75,9 @@
     },
     "service": {
       "spec": false
+    },
+    "schematics": {
+      "collection": "@ngrx/schematics"
     }
   }
 }
