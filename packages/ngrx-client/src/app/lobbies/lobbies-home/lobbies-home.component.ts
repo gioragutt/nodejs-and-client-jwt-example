@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { Lobby, selectAllLobbies, FetchLobbies } from '../store';
+import { Store } from '@ngrx/store';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-lobbies-home',
@@ -9,10 +13,12 @@ import { Component, OnInit } from '@angular/core';
   },
 })
 export class LobbiesHomeComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
+  lobbies$: Observable<Lobby[]>;
+  constructor(private store: Store<any>) {
+    this.lobbies$ = this.store.select(selectAllLobbies)
   }
 
+  ngOnInit(): void {
+    this.store.dispatch(new FetchLobbies());
+  }
 }

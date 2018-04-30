@@ -5,7 +5,7 @@ export interface AppState {
   routerReducer: RouterReducerState
 }
 
-export const getRouterState = createFeatureSelector<RouterReducerState>(
+export const selectRouterState = createFeatureSelector<RouterReducerState>(
   DEFAULT_ROUTER_FEATURENAME);
 
 export const reducer = routerReducer

@@ -30,7 +30,7 @@ export class ToolbarComponent {
   authState$: Observable<fromAuth.State>;
 
   constructor(private store: Store<any>) {
-    this.authState$ = this.store.select(fromAuth.getAuthState);
+    this.authState$ = this.store.select(fromAuth.selectAuthState);
   }
 
   login(): void {

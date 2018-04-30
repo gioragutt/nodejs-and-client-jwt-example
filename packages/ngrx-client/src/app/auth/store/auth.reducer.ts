@@ -57,24 +57,24 @@ export function reducer(state = initialState, action: AuthActions): State {
   return state;
 }
 
-export const getAuthState = createFeatureSelector<State>('auth')
+export const selectAuthState = createFeatureSelector<State>('auth')
 
-export const getAuthData = createSelector(
-  getAuthState,
+export const selectAuthData = createSelector(
+  selectAuthState,
   ({data}: State) => data,
 )
 
-export const getLoggedIn = createSelector(
-  getAuthData,
+export const selectLoggedIn = createSelector(
+  selectAuthData,
   (data: AuthData) => data !== null,
 )
 
-export const getAuthDataLoading = createSelector(
-  getAuthState,
+export const selectAuthDataLoading = createSelector(
+  selectAuthState,
   ({loading}: State) => loading,
 )
 
-export const getAuthDataError = createSelector(
-  getAuthState,
+export const selectAuthDataError = createSelector(
+  selectAuthState,
   ({error}: State) => error,
 )

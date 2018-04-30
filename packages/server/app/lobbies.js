@@ -32,8 +32,9 @@ const find = async (id) => {
     return null
   }
 
+  const lobby = await redis.hgetall(lobbyKey(id))
   return {
-    id,
+    ...lobby,
     users: await redis.smembers(lobbyUsersKey(id)),
     events: await map(redis.zrange(lobbyEventsKey(id), 0, -1), JSON.parse),
   }
@@ -56,8 +57,16 @@ const create = async ({id}) => {
     throw new AlreadyExistsError('lobbyAlreadyExists')
   }
 
+  const lobbyData = {
+    id,
+    name: `Lobby ${id}`,
+  }
+
   logger.info({id}, 'create')
-  await redis.sadd(LOBBY_IDS_KEY, id)
+  await redis.multi()
+    .sadd(LOBBY_IDS_KEY, id)
+    .hmset(lobbyKey(id), lobbyData)
+    .exec()
   await addEvent(id, 'create')
   return find(id)
 }

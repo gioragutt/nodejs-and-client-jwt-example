@@ -3,7 +3,7 @@ import { CanActivate } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { map, tap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
-import { getAuthData, AuthData, getLoggedIn } from '../store';
+import { selectAuthData, AuthData, selectLoggedIn } from '../store';
 import { NavigateTo } from '@app/router';
 
 @Injectable()
@@ -11,7 +11,7 @@ export class AnonymousGuard implements CanActivate {
   constructor(private store: Store<any>) { }
   
   canActivate(): Observable<boolean> {
-    return this.store.select(getLoggedIn).pipe(
+    return this.store.select(selectLoggedIn).pipe(
       map(loggedIn => !loggedIn),
       tap(this.navigateToAppIfLoggedIn)
     );

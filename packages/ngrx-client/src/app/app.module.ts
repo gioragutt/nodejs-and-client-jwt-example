@@ -6,7 +6,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { StoreRouterConnectingModule } from '@ngrx/router-store';
 
-import { AuthModule, getAuthState, AuthData, AUTH_DATA_STORAGE_KEY } from '@app/auth';
+import { AuthModule, selectAuthState, AuthData, AUTH_DATA_STORAGE_KEY } from '@app/auth';
 import { LobbiesModule } from '@app/lobbies';
 import { NgrxRouterModule } from '@app/router';
 import { CoreModule } from '@app/core';
@@ -38,7 +38,7 @@ import { AppComponent } from './app.component';
 })
 export class AppModule {
   constructor(store: Store<any>) {
-    store.select<any>(getAuthState).subscribe((authData: AuthData) => {
+    store.select<any>(selectAuthState).subscribe((authData: AuthData) => {
       console.log('saving auth data to storage', authData);
       saveToStorage(AUTH_DATA_STORAGE_KEY, authData);
     })
