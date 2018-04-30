@@ -7,13 +7,15 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { StoreRouterConnectingModule } from '@ngrx/router-store';
 
 import { AuthModule, getAuthState, AuthData, AUTH_DATA_STORAGE_KEY } from '@app/auth';
+import { LobbiesModule } from '@app/lobbies';
+import { NgrxRouterModule } from '@app/router';
+import { CoreModule } from '@app/core';
+
 import { saveToStorage } from '@app/shared/storage';
-import { reducers } from '@app/app.reducer';
 import { environment } from '@env/environment';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { LobbiesModule } from '@app/lobbies/lobbies.module';
 
 @NgModule({
   declarations: [
@@ -22,10 +24,12 @@ import { LobbiesModule } from '@app/lobbies/lobbies.module';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    CoreModule,
     LobbiesModule,
-    StoreModule.forRoot(reducers),
+    StoreModule.forRoot({}),
     EffectsModule.forRoot([]),
     StoreRouterConnectingModule,
+    NgrxRouterModule,
     AuthModule.forRoot(),
     StoreDevtoolsModule.instrument(),
   ],

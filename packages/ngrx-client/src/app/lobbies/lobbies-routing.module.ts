@@ -6,10 +6,7 @@ import { LobbiesHomeComponent } from './lobbies-home';
 const routes: Routes = [{
   path: 'lobbies',
   canActivate: [AuthGuard],
-  children: [
-    { path: '', component: LobbiesHomeComponent, canActivate: [AuthGuard] },
-    { path: '**', pathMatch: 'full', redirectTo: '' }
-  ]
+  component: LobbiesHomeComponent,
 }];
 
 @NgModule({

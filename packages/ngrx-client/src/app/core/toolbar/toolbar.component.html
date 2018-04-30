@@ -1,0 +1,17 @@
+<mat-toolbar color="primary">
+  <div class="toolbar-spacer"></div>
+  <mat-icon color="primary">
+    import_export
+  </mat-icon>
+  <div *ngIf="authState.loading; else notLoading">
+    <mat-icon>more_horiz</mat-icon>
+  </div>
+  <ng-template *ngIf="authState.data !== null; then loggedIn else loggedOut" #notLoading></ng-template>
+  <ng-template #loggedIn>
+    {{authState.data.profile.username}}
+    <button mat-button color="accent" class="auth-button">Logout</button>
+  </ng-template>
+  <ng-template #loggedout>
+    <button mat-button color="accent" class="auth-button">Login</button>
+  </ng-template>
+</mat-toolbar>
