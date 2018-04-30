@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { AuthData } from '../models/auth.models';
+import { AuthData } from './auth.models';
 
 export class Login implements Action {
   static TYPE = '[Auth] login';
