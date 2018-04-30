@@ -32,7 +32,7 @@ export function reducer(state = initialState, action: AuthActions): State {
         ...state,
         loading: false,
         error: null,
-        data: action.payload
+        data: action.authData
       }
     }
 
@@ -40,7 +40,7 @@ export function reducer(state = initialState, action: AuthActions): State {
       return {
         ...state,
         loading: false,
-        error: action.payload,
+        error: action.error,
         data: null,
       }
     }

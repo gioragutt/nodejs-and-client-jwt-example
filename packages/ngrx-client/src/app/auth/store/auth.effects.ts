@@ -16,7 +16,7 @@ export class AuthEffects {
   @Effect()
   login$ = this.actions$.pipe(
     ofType(authActions.AuthActionTypes.Login),
-    switchMap(({payload: {username, password}}: authActions.Login) => this.auth.login(username, password)),
+    switchMap(({username, password}: authActions.Login) => this.auth.login(username, password)),
     map((res: AuthData) => new authActions.LoginSuccess(res)),
     catchError(error => of(new authActions.LoginFailure(error)))
   )

@@ -10,17 +10,17 @@ export enum AuthActionTypes {
 
 export class Login implements Action {
   readonly type = AuthActionTypes.Login;
-  constructor(public payload: {username: string, password: string}) {}
+  constructor(public username: string, public password: string) {}
 }
 
 export class LoginSuccess implements Action {
   readonly type = AuthActionTypes.LoginSuccess;
-  constructor(public payload: AuthData) {}
+  constructor(public authData: AuthData) {}
 }
 
 export class LoginFailure implements Action {
   readonly type = AuthActionTypes.LoginFailure;
-  constructor(public payload: any) {}
+  constructor(public error: any) {}
 }
 
 export class Logout implements Action {

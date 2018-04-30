@@ -27,6 +27,6 @@ export class LoginPageComponent {
       return;
     }
 
-    this.store.dispatch(new authStore.Login(event));
+    this.store.dispatch(new authStore.Login(event.username, event.password));
   }
 }
