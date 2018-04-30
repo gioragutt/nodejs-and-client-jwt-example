@@ -2,6 +2,9 @@ import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 import { AuthData } from './auth.models';
 import * as fromAuth from './auth.actions';
+import { loadFromStorage } from '@app/shared/storage';
+
+export const AUTH_DATA_STORAGE_KEY = 'AUTH_DATA_STORAGE_KEY'
 
 export interface State {
   data: AuthData;
@@ -10,7 +13,7 @@ export interface State {
   error: any;
 }
 
-export const initialState: State = {
+export const initialState: State = loadFromStorage(AUTH_DATA_STORAGE_KEY) || {
   data: null,
   error: null,
   loading: false,

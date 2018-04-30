@@ -1,0 +1,13 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+
+  .field {
+    flex: 1;
+  }
+
+  button {
+    margin-top: 10px;
+  }
+}
