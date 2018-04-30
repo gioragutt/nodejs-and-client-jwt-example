@@ -7,11 +7,18 @@
     <mat-icon>more_horiz</mat-icon>
   </div>
   <ng-template *ngIf="authState.data !== null; then loggedIn else loggedOut" #notLoading></ng-template>
-  <ng-template #loggedIn>
-    {{authState.data.profile.username}}
-    <button mat-button color="accent" class="auth-button">Logout</button>
+
+  <ng-template #loggedOut>
+    <button mat-button color="accent" (click)="login.emit()">Login</button>
   </ng-template>
-  <ng-template #loggedout>
-    <button mat-button color="accent" class="auth-button">Login</button>
+
+  <ng-template #loggedIn>
+    <mat-menu #profileMenu="matMenu">
+      <button mat-menu-item (click)="logout.emit()">Logout</button>
+    </mat-menu>
+
+    <button mat-button [matMenuTriggerFor]="profileMenu">
+      {{authState.data.profile.username}}
+    </button>
   </ng-template>
 </mat-toolbar>

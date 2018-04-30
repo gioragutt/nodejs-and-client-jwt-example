@@ -3,15 +3,13 @@ import { CanActivate } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { map, tap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
-import { getAuthData, AuthData } from '../store';
+import { AuthData, getLoggedIn } from '../store';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(private store: Store<any>) { }
   
   canActivate(): Observable<boolean> {
-    return this.store.select(getAuthData).pipe(
-      map((authData: AuthData) => authData !== null)
-    );
+    return this.store.select(getLoggedIn);
   }
 }

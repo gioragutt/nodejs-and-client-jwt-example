@@ -29,24 +29,4 @@ export class LoginPageComponent {
 
     this.store.dispatch(new authStore.Login(event));
   }
-  // constructor(private router: Router, private auth: AuthService) {
-  //   this.navigateHomeIfLoggedIn();
-  // }
-
-  // private navigateHomeIfLoggedIn(): void {
-  //   if (this.auth.loggedIn) {
-  //     this.router.navigate(['']);
-  //   }
-  // }
-
-  // onSubmit(event: AuthFormData): void {
-  //   if (!event || event instanceof Event) {
-  //     return;
-  //   }
-
-  //   this.auth.login(event.username, event.password).subscribe(
-  //     () => this.navigateHomeIfLoggedIn(),
-  //     error => console.error(error),
-  //   );
-  // }
 }

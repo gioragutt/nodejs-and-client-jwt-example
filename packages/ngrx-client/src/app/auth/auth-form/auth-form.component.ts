@@ -28,8 +28,9 @@ export class AuthFormComponent {
   }
 
   get passwordHint(): string {
-    return this.password.value && (this.password.value.length < this.minPasswordLength)
-      ? `${this.password.value.length} / ${this.minPasswordLength}`
+    const length = this.password.value ? this.password.value.length : 0;
+    return length < this.minPasswordLength
+      ? `${length} / ${this.minPasswordLength}`
       : 'Okay!'
   }
 

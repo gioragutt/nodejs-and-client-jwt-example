@@ -1,7 +1,7 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 import { AuthData } from './auth.models';
-import * as fromAuth from './auth.actions';
+import { AuthActions, AuthActionTypes } from './auth.actions';
 import { loadFromStorage } from '@app/shared/storage';
 
 export const AUTH_DATA_STORAGE_KEY = 'AUTH_DATA_STORAGE_KEY'
@@ -9,7 +9,6 @@ export const AUTH_DATA_STORAGE_KEY = 'AUTH_DATA_STORAGE_KEY'
 export interface State {
   data: AuthData;
   loading: boolean;
-  loaded: boolean;
   error: any;
 }
 
@@ -17,35 +16,41 @@ export const initialState: State = loadFromStorage(AUTH_DATA_STORAGE_KEY) || {
   data: null,
   error: null,
   loading: false,
-  loaded: false,
 };
 
-export function reducer(state = initialState, action: fromAuth.LoginActions): State {
+export function reducer(state = initialState, action: AuthActions): State {
   switch(action.type) {
-    case (fromAuth.Login.TYPE): {
+    case (AuthActionTypes.Login): {
       return {
         ...state,
         loading: true,
       };
     }
 
-    case (fromAuth.LoginSuccess.TYPE): {
+    case (AuthActionTypes.LoginSuccess): {
       return {
         ...state,
         loading: false,
-        loaded: true,
         error: null,
         data: action.payload
       }
     }
 
-    case (fromAuth.LoginFailure.TYPE): {
+    case (AuthActionTypes.LoginFailure): {
       return {
         ...state,
         loading: false,
         error: action.payload,
-        loaded: false,
         data: null,
+      }
+    }
+
+    case (AuthActionTypes.Logout): {
+      return {
+        ...state,
+        data: null,
+        loading: false,
+        error: null,
       }
     }
   }
@@ -59,14 +64,14 @@ export const getAuthData = createSelector(
   ({data}: State) => data,
 )
 
+export const getLoggedIn = createSelector(
+  getAuthData,
+  (data: AuthData) => data !== null,
+)
+
 export const getAuthDataLoading = createSelector(
   getAuthState,
   ({loading}: State) => loading,
-)
-
-export const getAuthDataLoaded = createSelector(
-  getAuthState,
-  ({loaded}: State) => loaded,
 )
 
 export const getAuthDataError = createSelector(

@@ -8,21 +8,29 @@ import * as authActions from './auth.actions';
 import { AuthService } from '../auth.service';
 import { AuthData } from './auth.models';
 import { Router } from '@angular/router';
+import { NavigateTo } from '@app/router';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class AuthEffects {
   @Effect()
   login$ = this.actions$.pipe(
-    ofType(authActions.Login.TYPE),
+    ofType(authActions.AuthActionTypes.Login),
     switchMap(({payload: {username, password}}: authActions.Login) => this.auth.login(username, password)),
     map((res: AuthData) => new authActions.LoginSuccess(res)),
     catchError(error => of(new authActions.LoginFailure(error)))
   )
 
-  @Effect({ dispatch: false })
+  @Effect()
   redirectAfterLogin$ = this.actions$.pipe(
-    ofType(authActions.LoginSuccess.TYPE),
-    tap(() => this.router.navigate(['lobbies']))
+    ofType(authActions.AuthActionTypes.LoginSuccess),
+    map(() => new NavigateTo({to: '/lobbies'}))
+  )
+
+  @Effect()
+  redirectAfterLogout$ = this.actions$.pipe(
+    ofType(authActions.AuthActionTypes.Logout),
+    map(() => new NavigateTo({to: '/login'}))
   )
 
   @Effect({ dispatch: false })
