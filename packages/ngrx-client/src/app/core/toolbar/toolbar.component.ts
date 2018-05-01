@@ -3,6 +3,7 @@ import { Store } from '@ngrx/store';
 import * as fromAuth from '@app/auth';
 import { Observable } from 'rxjs/Observable';
 import { NavigateTo } from '@app/router';
+import * as fromWebsocket from '@app/websocket';
 
 @Component({
   selector: 'app-presentational-toolbar',
@@ -12,6 +13,7 @@ import { NavigateTo } from '@app/router';
 })
 export class PresentationalToolbarComponent {
   @Input() authState: fromAuth.State;
+  @Input() websocketConnected: boolean;
   @Output() login = new EventEmitter();
   @Output() logout = new EventEmitter();
 }
@@ -21,17 +23,17 @@ export class PresentationalToolbarComponent {
   template: `
     <app-presentational-toolbar
       [authState]="authState$ | async"
+      [websocketConnected]="websocketConnected$ | async"
       (login)="login()"
       (logout)="logout()"
     ></app-presentational-toolbar>
   `,
 })
 export class ToolbarComponent {
-  authState$: Observable<fromAuth.State>;
+  authState$ = this.store.select(fromAuth.selectAuthState);
+  websocketConnected$ = this.store.select(fromWebsocket.selectConnected);
 
-  constructor(private store: Store<any>) {
-    this.authState$ = this.store.select(fromAuth.selectAuthState);
-  }
+  constructor(private store: Store<any>) { }
 
   login(): void {
     this.store.dispatch(new NavigateTo({to: '/login'}))

@@ -1,8 +1,5 @@
 <mat-toolbar color="primary">
   <div class="toolbar-spacer"></div>
-  <mat-icon color="primary">
-    import_export
-  </mat-icon>
   <div *ngIf="authState.loading; else notLoading">
     <mat-icon>more_horiz</mat-icon>
   </div>
@@ -16,7 +13,11 @@
     <mat-menu #profileMenu="matMenu">
       <button mat-menu-item (click)="logout.emit()">Logout</button>
     </mat-menu>
-
+    <mat-icon
+      [matTooltip]="websocketConnected ? 'WS Connected' : 'WS Disonnected'"
+      [color]="websocketConnected ? 'accent' : 'default'">
+      import_export
+    </mat-icon>
     <button mat-button [matMenuTriggerFor]="profileMenu">
       {{authState.data.profile.username}}
     </button>

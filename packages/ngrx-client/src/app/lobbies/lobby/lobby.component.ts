@@ -1,16 +1,26 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy, EventEmitter, Output } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Lobby, selectSelectedLobby, AddEvent } from '../store';
 import { Store } from '@ngrx/store';
-import { tap } from 'rxjs/operators';
+import { tap, map } from 'rxjs/operators';
+import { selectAuthData } from '@app/auth';
+import { EmitWebsocketMessage } from '@app/websocket';
 
 @Component({
   selector: 'app-presentational-lobby',
   templateUrl: './lobby.component.html',
-  styleUrls: ['./lobby.component.scss']
+  styleUrls: ['./lobby.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PresentationalLobbyComponent {
   @Input() lobby: Lobby;
+  @Input() username: string;
+  @Output() join = new EventEmitter<string>();
+  @Output() leave = new EventEmitter<string>();
+
+  get inLobby(): boolean {
+    return this.lobby.users.includes(this.username);
+  }
 
   get users(): string {
     return this.lobby.users.join();
@@ -21,33 +31,26 @@ export class PresentationalLobbyComponent {
   selector: 'app-lobby',
   template: `
     <app-presentational-lobby
-      [lobby]="lobby$ | async"
+      *ngIf="lobby$ | async as lobby"
+      [lobby]="lobby"
+      [username]="username$ | async"
+      (join)="onJoin($event)"
+      (leave)="onLeave($event)"
     ></app-presentational-lobby>
   `
 })
 export class LobbyComponent {
-  lobby$: Observable<Lobby>;
-  constructor(private store: Store<any>) {
-    this.lobby$ = this.store.select(selectSelectedLobby).pipe(
-      tap(lobby => console.log('selected lobby', lobby))
-    );
+  lobby$ = this.store.select(selectSelectedLobby);
+  username$ = this.store.select(selectAuthData).pipe(map(data => data.profile.username));
 
-    setTimeout(() => {
-      this.store.dispatch(new AddEvent({event: {
-        id: '1',
-        event: 'join',
-        timestamp: Date.now(),
-        username: 'LALALA',
-      }}))
+  constructor(private store: Store<any>) { }
 
-      setTimeout(() => {
-        this.store.dispatch(new AddEvent({event: {
-          id: '1',
-          event: 'leave',
-          timestamp: Date.now(),
-          username: 'LALALA',
-        }}))
-      }, 2000)
-    }, 5000)
+  onJoin(id: string): void {
+    this.store.dispatch(new EmitWebsocketMessage('join_lobby', {id}))
+  }
+
+  onLeave(id: string): void {
+    this.store.dispatch(new EmitWebsocketMessage('leave_lobby', {id}))
   }
 }
+

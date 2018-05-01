@@ -10,6 +10,7 @@ import { AuthModule, selectAuthState, AuthData, AUTH_DATA_STORAGE_KEY } from '@a
 import { LobbiesModule } from '@app/lobbies';
 import { NgrxRouterModule } from '@app/router';
 import { CoreModule } from '@app/core';
+import { WebsocketModule } from '@app/websocket';
 
 import { saveToStorage } from '@app/shared/storage';
 import { environment } from '@env/environment';
@@ -26,6 +27,7 @@ import { AppComponent } from './app.component';
     AppRoutingModule,
     CoreModule,
     LobbiesModule,
+    WebsocketModule.forRoot(),
     StoreModule.forRoot({}),
     EffectsModule.forRoot([]),
     StoreRouterConnectingModule,

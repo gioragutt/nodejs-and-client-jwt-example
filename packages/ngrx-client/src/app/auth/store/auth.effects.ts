@@ -33,10 +33,10 @@ export class AuthEffects {
     map(() => new NavigateTo({to: '/login'}))
   )
 
-  @Effect({ dispatch: false })
-  logger$ = this.actions$.pipe(
-    tap(action => console.log('got action', action))
-  )
+  // @Effect({ dispatch: false })
+  // logger$ = this.actions$.pipe(
+  //   tap(action => console.log('got action', action))
+  // )
 
   constructor(
     private actions$: Actions,

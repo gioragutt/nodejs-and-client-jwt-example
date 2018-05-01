@@ -3,8 +3,8 @@ import { AuthData } from './auth.models';
 
 export enum AuthActionTypes {
   Login = '[Auth] Login',
-  LoginSuccess = '[Auth] LoginSuccess',
-  LoginFailure = '[Auth] LoginFailure',
+  LoginSuccess = '[Auth] Login Success',
+  LoginFailure = '[Auth] Login Failure',
   Logout = '[Auth] Logout',
 }
 

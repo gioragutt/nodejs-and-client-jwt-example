@@ -74,19 +74,19 @@ const create = async ({id}) => {
 const join = async (id, username) => {
   logger.info({id, username}, 'join')
   await redis.sadd(lobbyUsersKey(id), username)
-  await addEvent(id, 'join', {username})
-  return find(id)
+  return addEvent(id, 'join', {username})
 }
 
 const leave = async (id, username) => {
   logger.info({id, username}, 'leave')
   await redis.srem(lobbyUsersKey(id), username)
-  await addEvent(id, 'leave', {username})
-  return find(id)
+  return addEvent(id, 'leave', {username})
 }
 
-const userInLobby = async (id, userId) =>
-  redis.sismember(lobbyUsersKey(id), userId)
+const userInLobby = async (id, userId) => {
+  const result = await redis.sismember(lobbyUsersKey(id), userId)
+  return result === 1
+}
 
 const message = async (id, username, content) =>
   addEvent(id, 'message', {username, message: content})

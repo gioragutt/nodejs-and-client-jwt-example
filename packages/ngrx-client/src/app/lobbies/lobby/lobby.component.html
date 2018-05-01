@@ -1,7 +1,22 @@
-<div>
-  <h1>Lobby: {{lobby.id}}</h1>
-  <p>{{users}}</p>
-  <ul>
-    <li *ngFor="let event of lobby.events">{{event | json}}</li>
-  </ul>
-</div>
+<mat-drawer-container class="container">
+  <mat-drawer mode="side" opened="true" position="end">Drawer content</mat-drawer>
+  <mat-drawer-content class="page">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{lobby.name}}</mat-card-title>
+        <div mat-card-avatar>
+          <button mat-icon-button (click)="inLobby ? leave.emit(lobby.id) : join.emit(lobby.id)">
+            <mat-icon [color]="inLobby ? 'accent' : 'primary'">{{inLobby ? 'call_end' : 'call'}}</mat-icon>
+          </button>
+        </div>
+        <mat-card-subtitle *ngIf="lobby.users.length > 0">Connected users: {{users}}</mat-card-subtitle>
+        <mat-card-subtitle *ngIf="lobby.users.length === 0">No one is connected to this lobby! :(</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <ul>
+          <li *ngFor="let event of lobby.events">{{event | json}}</li>
+        </ul>
+      </mat-card-content>
+    </mat-card>
+  </mat-drawer-content>
+</mat-drawer-container>

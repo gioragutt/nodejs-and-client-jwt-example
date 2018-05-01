@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { DEFAULT_ROUTER_FEATURENAME } from '@ngrx/router-store'
+import { DEFAULT_ROUTER_FEATURENAME, RouterStateSerializer } from '@ngrx/router-store'
 
-import { reducer } from './router.reducer'
+import { reducer, CustomSerializer } from './router.reducer'
 import { RouterEffects } from './router.effects';
 
 @NgModule({
@@ -13,6 +13,8 @@ import { RouterEffects } from './router.effects';
     StoreModule.forFeature(DEFAULT_ROUTER_FEATURENAME, reducer),
     EffectsModule.forFeature([RouterEffects])
   ],
-  declarations: []
+  providers: [
+    { provide: RouterStateSerializer, useClass: CustomSerializer }
+  ],
 })
 export class NgrxRouterModule { }

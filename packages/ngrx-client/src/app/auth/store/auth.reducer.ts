@@ -64,6 +64,11 @@ export const selectAuthData = createSelector(
   ({data}: State) => data,
 )
 
+export const selectToken = createSelector(
+  selectAuthData,
+  (data: AuthData) => data && data.token,
+)
+
 export const selectLoggedIn = createSelector(
   selectAuthData,
   (data: AuthData) => data !== null,

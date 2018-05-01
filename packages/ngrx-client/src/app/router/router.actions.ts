@@ -7,17 +7,17 @@ export interface NavigatePayload {
 }
 
 export class NavigateTo implements Action {
-  static TYPE = '[Router] NavigateTo';
+  static TYPE = '[Router] Navigate To';
   type = NavigateTo.TYPE;
   constructor(public payload: NavigatePayload) {}
 }
 
 export class NavigateBack implements Action {
-  static TYPE = '[Router] NavigateBack';
+  static TYPE = '[Router] Navigate Back';
   type = NavigateBack.TYPE;
 }
 
 export class NavigateForward implements Action {
-  static TYPE = '[Router] NavigateForward';
+  static TYPE = '[Router] Navigate Forward';
   type = NavigateBack.TYPE;
 }
