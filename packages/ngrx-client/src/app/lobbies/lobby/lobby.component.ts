@@ -41,7 +41,7 @@ export class PresentationalLobbyComponent {
 })
 export class LobbyComponent {
   lobby$ = this.store.select(selectSelectedLobby);
-  username$ = this.store.select(selectAuthData).pipe(map(data => data.profile.username));
+  username$ = this.store.select(selectAuthData).pipe(map(data => data && data.profile.username));
 
   constructor(private store: Store<any>) { }
 

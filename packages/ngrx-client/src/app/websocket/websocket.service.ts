@@ -55,7 +55,6 @@ export class WebsocketService {
 
   disconnect(): void {
     if (this.socket) {
-      console.log('disconnecting websocket');
       this.socket.disconnect();
       this.socket = null
     }
@@ -67,10 +66,6 @@ export class WebsocketService {
 
   private connect(token: string): void {
     this.disconnect();
-    console.log('connecting');
-    setTimeout(() => {
-      this.store.dispatch(new EmitWebsocketMessage('message', 'hello world'))
-    }, 5000)
     this.socket = connect(environment.serverUrl, {query: {token}});
     this.socket.on('error', error => this.updateStatus({error}));
     this.socket.on('connect', () => {
