@@ -1,3 +1,11 @@
 .container {
   min-width: 240px;
+
+  .create-form {
+    display: flex;
+
+    mat-form-field  {
+      margin: auto;
+    }
+  }
 }

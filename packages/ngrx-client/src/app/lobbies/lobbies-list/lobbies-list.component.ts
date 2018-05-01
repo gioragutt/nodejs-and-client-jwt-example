@@ -1,5 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Lobby } from '../store';
+import { Store } from '@ngrx/store';
+import { EmitWebsocketMessage } from '@app/websocket';
 
 @Component({
   selector: 'app-lobbies-list',
@@ -8,4 +10,12 @@ import { Lobby } from '../store';
 })
 export class LobbiesListComponent {
   @Input() lobbies: Lobby[];
+  lobbyName: string = '';
+
+  constructor(private store: Store<any>) { }
+
+  createLobby() {
+    this.store.dispatch(new EmitWebsocketMessage('create_lobby', {name: this.lobbyName}));
+    this.lobbyName = '';
+  }
 }

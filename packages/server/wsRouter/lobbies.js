@@ -15,13 +15,13 @@ const joinUserToConnectedLobbies = async (socket, username) => {
 module.exports = async (namespace, socket, username) => {
   await joinUserToConnectedLobbies(socket, username)
 
-  socket.on('create_lobby', async ({id}) => {
+  socket.on('create_lobby', async ({name}) => {
     try {
-      const lobby = await lobbies.create({id})
-      namespace.emit('new_lobby_created', lobby)
-      logger.info({username, id}, '[WS] new_lobby_created')
+      const lobby = await lobbies.create({name})
+      namespace.emit('lobby_created', lobby)
+      logger.info({username, name}, '[WS] new_lobby_created')
     } catch (e) {
-      logger.error({username, id}, '[WS] lobby_already_exists')
+      logger.error({username, name}, '[WS] lobby_already_exists')
     }
   })
 
@@ -38,7 +38,7 @@ module.exports = async (namespace, socket, username) => {
 
   socket.on('leave_lobby', async ({id}) => {
     if (!await lobbies.userInLobby(id, username)) {
-      logger.warn({id, username}, '[WS] user tried to leave room here\'s not in');
+      logger.warn({id, username}, '[WS] user tried to leave room here\'s not in')
       return
     }
     logger.info({id, username}, '[WS] leave_lobby')
@@ -56,5 +56,15 @@ module.exports = async (namespace, socket, username) => {
     const event = await lobbies.message(id, username, message)
     logger.info({username, id, message}, '[WS] message_to_lobby')
     namespace.to(id).emit('message_to_lobby', event)
+  })
+
+  socket.on('delete_lobby', async ({id}) => {
+    if (!await lobbies.userInLobby(id, username)) {
+      logger.warn({id, username}, '[WS] user tried to delete room when he\'s not in it')
+      return
+    }
+    logger.info({id, username}, '[WS] delete_lobby')
+    await lobbies.delete(id)
+    namespace.emit('lobby_deleted', id)
   })
 }

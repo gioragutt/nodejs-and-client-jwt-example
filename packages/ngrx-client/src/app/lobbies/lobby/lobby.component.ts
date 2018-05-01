@@ -17,6 +17,7 @@ export class PresentationalLobbyComponent {
   @Input() username: string;
   @Output() join = new EventEmitter<string>();
   @Output() leave = new EventEmitter<string>();
+  @Output() delete = new EventEmitter<string>();
 
   get inLobby(): boolean {
     return this.lobby.users.includes(this.username);
@@ -36,6 +37,7 @@ export class PresentationalLobbyComponent {
       [username]="username$ | async"
       (join)="onJoin($event)"
       (leave)="onLeave($event)"
+      (delete)="onDelete($event)"
     ></app-presentational-lobby>
   `
 })
@@ -52,5 +54,8 @@ export class LobbyComponent {
   onLeave(id: string): void {
     this.store.dispatch(new EmitWebsocketMessage('leave_lobby', {id}))
   }
-}
 
+  onDelete(id: string): void {
+    this.store.dispatch(new EmitWebsocketMessage('delete_lobby', {id}))
+  }
+}

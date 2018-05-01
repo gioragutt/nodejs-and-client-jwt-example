@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { switchMap, map, catchError, retryWhen, delay, take } from 'rxjs/operators';
+import { switchMap, map, catchError, retryWhen, delay, take, distinctUntilChanged, filter } from 'rxjs/operators';
 import { merge } from 'rxjs/observable/merge';
 
-import { WebsocketService } from '@app/websocket';
-
+import * as fromWebsocket from '@app/websocket';
 import * as fromLobby from './lobby.actions'
+
 import { LobbiesService } from '../lobbies.service';
 import { Lobby, JoinLobbyEvent, LeaveLobbyEvent, MessageLobbyEvent, LobbyEvent } from './lobby.model';
 import { Store } from '@ngrx/store';
@@ -21,14 +21,27 @@ export class LobbyEffects {
     retryWhen(errors => errors.pipe(delay(1000), take(5)))
   )
 
+  @Effect()
+  fetchOnWebsocketReconnection$ = this.actions$.pipe(
+    ofType(fromWebsocket.WebsocketActionTypes.WebsocketConnectionChanged),
+    map((action: fromWebsocket.WebsocketConnectionChanged) => action.payload.connected),
+    distinctUntilChanged(),
+    filter(connected => connected),
+    map(() => new fromLobby.FetchLobbies())
+  )
+
   constructor(
     private actions$: Actions,
     private lobbies: LobbiesService,
-    private websocket: WebsocketService,
+    private websocket: fromWebsocket.WebsocketService,
     private store: Store<any>,
   ) {
-    this.websocket.on<Lobby>('new_lobby_created').subscribe(lobby => {
+    this.websocket.on<Lobby>('lobby_created').subscribe(lobby => {
       this.store.dispatch(new fromLobby.AddLobby({lobby}));
+    })
+
+    this.websocket.on<string>('lobby_deleted').subscribe(id => {
+      this.store.dispatch(new fromLobby.DeleteLobby({id}));
     })
 
     merge(
