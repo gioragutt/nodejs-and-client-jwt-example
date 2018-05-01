@@ -1,9 +1,10 @@
 import { Action } from '@ngrx/store';
 import { Update } from '@ngrx/entity';
-import { Lobby } from './lobby.model';
+import { Lobby, LobbyEvent } from './lobby.model';
 
 export enum LobbyActionTypes {
   FetchLobbies = '[Lobby] Fetch Lobbies',
+  AddEvent = '[Lobby] Add Event',
   LoadLobbies = '[Lobby] Load Lobbies',
   AddLobby = '[Lobby] Add Lobby',
   UpsertLobby = '[Lobby] Upsert Lobby',
@@ -18,6 +19,11 @@ export enum LobbyActionTypes {
 
 export class FetchLobbies implements Action {
   readonly type = LobbyActionTypes.FetchLobbies;
+}
+
+export class AddEvent implements Action {
+  readonly type = LobbyActionTypes.AddEvent;
+  constructor(public payload: { event: LobbyEvent }) { }
 }
 
 export class LoadLobbies implements Action {
@@ -71,6 +77,7 @@ export class ClearLobbies implements Action {
 
 export type LobbyActions =
   | FetchLobbies
+  | AddEvent
   | LoadLobbies
   | AddLobby
   | UpsertLobby

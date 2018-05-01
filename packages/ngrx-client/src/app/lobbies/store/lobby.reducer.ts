@@ -4,6 +4,7 @@ import { LobbyActions, LobbyActionTypes } from './lobby.actions';
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { selectRouterState } from '@app/router';
 import { RouterStateSnapshot, Params } from '@angular/router';
+import { eventReducer } from './event.reducer';
 
 export interface State extends EntityState<Lobby> {
   loading: boolean;
@@ -19,6 +20,16 @@ export const initialState: State = adapter.getInitialState({
 
 export function reducer(state = initialState, action: LobbyActions): State {
   switch (action.type) {
+    case LobbyActionTypes.AddEvent: {
+      const {event} = action.payload;
+      const lobby = state.entities[event.id];
+      const updatedLobby = eventReducer({
+        ...lobby,
+        events: [...lobby.events, event]
+      }, event)
+      return adapter.updateOne({id: event.id, changes: updatedLobby}, state);
+    }
+
     case LobbyActionTypes.AddLobby: {
       return adapter.addOne(action.payload.lobby, state);
     }

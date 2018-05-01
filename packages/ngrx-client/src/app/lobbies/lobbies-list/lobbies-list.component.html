@@ -1,4 +1,5 @@
 <div class="container">
+  <h1 *ngIf="lobbies.length === 0">No lobbies!</h1>
   <mat-nav-list>
     <a mat-list-item [routerLink]="[lobby.id]" *ngFor="let lobby of lobbies">{{lobby.id}} (Users: {{lobby.users.length}})</a>
   </mat-nav-list>

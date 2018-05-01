@@ -1,6 +1,7 @@
 <div>
-  lobby works!
-  <div>
-    {{ lobby | json }}
-  </div>
+  <h1>Lobby: {{lobby.id}}</h1>
+  <p>{{users}}</p>
+  <ul>
+    <li *ngFor="let event of lobby.events">{{event | json}}</li>
+  </ul>
 </div>
