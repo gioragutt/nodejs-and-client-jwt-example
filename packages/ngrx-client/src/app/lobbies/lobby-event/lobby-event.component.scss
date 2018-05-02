@@ -1,0 +1,58 @@
+.container {
+  padding: 5px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  .avatar {
+    height: 30px;
+    width: 30px;
+    display: flex;
+    margin-right: 10px;
+
+    mat-icon {
+      margin: auto;
+    }
+  }
+
+  .event {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    
+    .header {
+      margin-bottom: 5px;
+      
+      * { display: inline-block }
+
+      .name {
+        font-weight: 500;
+        font-size: 16px;
+        margin-right: 2px;
+      }
+
+      .timestamp {
+        opacity: 0.8;
+        font-size: 13px;
+      }
+    }
+
+    .content-wrapper {
+      padding-right: 20px;
+
+      .content.join, .content.leave {
+        opacity: 0.8;
+      }
+  
+      .content.message {
+        word-wrap: break-word;
+        max-width: 700px;
+        font-size: 16px;
+      }
+    }
+  }
+}
+
+mat-divider {
+  margin-bottom: 2px;
+}

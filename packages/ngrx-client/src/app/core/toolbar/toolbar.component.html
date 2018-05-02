@@ -14,9 +14,8 @@
       <button mat-menu-item (click)="logout.emit()">Logout</button>
     </mat-menu>
     <mat-icon
-      [matTooltip]="websocketConnected ? 'WS Connected' : 'WS Disonnected'"
-      [color]="websocketConnected ? 'accent' : 'default'">
-      import_export
+      [matTooltip]="websocketConnected ? 'WS Connected' : 'WS Disonnected'">
+      {{websocketConnected ? 'network_wifi' : 'signal_wifi_off'}}
     </mat-icon>
     <button mat-button [matMenuTriggerFor]="profileMenu">
       {{authState.data.profile.username}}

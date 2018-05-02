@@ -1,16 +1,12 @@
 <div class="container">
-  <form (ngSubmit)="createLobby()" class="create-form">
-    <mat-form-field>
-      <input matInput placeholder="Create Lobby"
-              [(ngModel)]="lobbyName" name="name">
-      <button mat-button [disabled]="!lobbyName"
-              matSuffix mat-icon-button>
-        <mat-icon>create</mat-icon>
-      </button>
-    </mat-form-field>
-  </form>
-  <h1 *ngIf="lobbies.length === 0">No lobbies!</h1>
+  <app-text-input (submitText)="createLobby($event)" placeholder="Create Lobby" icon="group_add"></app-text-input>
+  <h1 *ngIf="lobbies.length === 0" class="mat-display-1 no-lobbies">
+    <div class="mat-headline">No lobbies!</div>
+    <div class="mat-subheading-2">Create one to start chatting!</div>
+  </h1>
   <mat-nav-list>
-    <a mat-list-item [routerLink]="[lobby.id]" *ngFor="let lobby of lobbies">{{lobby.name}} (Users: {{lobby.users.length}})</a>
+    <a mat-list-item [routerLink]="[lobby.id]" *ngFor="let lobby of lobbies">
+      {{lobby.name}} (Users: {{lobby.users.length}})
+    </a>
   </mat-nav-list>
 </div>

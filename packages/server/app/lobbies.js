@@ -20,13 +20,11 @@ const deleteLobby = async ({id}) => {
   logger.info({id}, 'delete')
   const name = await redis.hget(lobbyKey(id), 'name')
 
-  await redis.multi([
-    ['srem', LOBBY_IDS_KEY, id],
-    ['srem', LOBBY_NAMES_KEY, name],
-    ['del', lobbyKey(id)],
-    ['del', lobbyUsersKey(id)],
-    ['del', lobbyEventsKey(id)],
-  ]).exec()
+  await redis.multi()
+    .srem(LOBBY_IDS_KEY, id)
+    .srem(LOBBY_NAMES_KEY, name)
+    .del(lobbyKey(id), lobbyUsersKey(id), lobbyEventsKey(id))
+    .exec()
 }
 
 const existsById = async id => redis.sismember(LOBBY_IDS_KEY, id)
@@ -57,7 +55,7 @@ const addEvent = async (id, eventName, context = {}) => {
   return event
 }
 
-const create = async ({name}) => {
+const create = async ({name, username: owner}) => {
   if (await existsByName(name)) {
     throw new AlreadyExistsError('lobbyAlreadyExists', {name})
   }
@@ -66,6 +64,7 @@ const create = async ({name}) => {
   const lobbyData = {
     id,
     name,
+    owner,
     description: '',
   }
 
@@ -74,9 +73,15 @@ const create = async ({name}) => {
     .sadd(LOBBY_IDS_KEY, id)
     .sadd(LOBBY_NAMES_KEY, name)
     .hmset(lobbyKey(id), lobbyData)
+    .sadd(lobbyUsersKey(id), owner)
     .exec()
-  await addEvent(id, 'create')
+  await addEvent(id, 'create', {owner})
   return find(id)
+}
+
+const isOwner = async (id, username) => {
+  const owner = await redis.hget(lobbyKey(id), 'owner')
+  return !!username && !!owner && owner === username
 }
 
 const join = async (id, username) => {
@@ -91,8 +96,8 @@ const leave = async (id, username) => {
   return addEvent(id, 'leave', {username})
 }
 
-const userInLobby = async (id, userId) => {
-  const result = await redis.sismember(lobbyUsersKey(id), userId)
+const userInLobby = async (id, username) => {
+  const result = await redis.sismember(lobbyUsersKey(id), username)
   return result === 1
 }
 
@@ -116,4 +121,5 @@ module.exports = {
   find,
   userInLobby,
   message,
+  isOwner,
 }

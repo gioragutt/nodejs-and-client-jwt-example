@@ -10,12 +10,10 @@ import { EmitWebsocketMessage } from '@app/websocket';
 })
 export class LobbiesListComponent {
   @Input() lobbies: Lobby[];
-  lobbyName: string = '';
 
   constructor(private store: Store<any>) { }
 
-  createLobby() {
-    this.store.dispatch(new EmitWebsocketMessage('create_lobby', {name: this.lobbyName}));
-    this.lobbyName = '';
+  createLobby(name: string) {
+    this.store.dispatch(new EmitWebsocketMessage('create_lobby', {name}));
   }
 }

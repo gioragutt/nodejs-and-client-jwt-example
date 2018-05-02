@@ -17,7 +17,8 @@ module.exports = async (namespace, socket, username) => {
 
   socket.on('create_lobby', async ({name}) => {
     try {
-      const lobby = await lobbies.create({name})
+      const lobby = await lobbies.create({name, username})
+      socket.join(lobby.id)
       namespace.emit('lobby_created', lobby)
       logger.info({username, name}, '[WS] new_lobby_created')
     } catch (e) {
@@ -26,6 +27,11 @@ module.exports = async (namespace, socket, username) => {
   })
 
   socket.on('join_lobby', async ({id}) => {
+    if (await lobbies.isOwner(id, username)) {
+      logger.warn({id, username}, '[WS] lobby owner can\'t re-join lobby')
+      return
+    }
+
     if (await lobbies.userInLobby(id, username)) {
       logger.warn({id, username}, '[WS] user tried to join room here\'s already in')
       return
@@ -37,10 +43,16 @@ module.exports = async (namespace, socket, username) => {
   })
 
   socket.on('leave_lobby', async ({id}) => {
+    if (await lobbies.isOwner(id, username)) {
+      logger.warn({id, username}, '[WS] lobby owner can\'t leave lobby')
+      return
+    }
+
     if (!await lobbies.userInLobby(id, username)) {
       logger.warn({id, username}, '[WS] user tried to leave room here\'s not in')
       return
     }
+
     logger.info({id, username}, '[WS] leave_lobby')
     socket.leave(id)
     const event = await lobbies.leave(id, username)
@@ -59,12 +71,13 @@ module.exports = async (namespace, socket, username) => {
   })
 
   socket.on('delete_lobby', async ({id}) => {
-    if (!await lobbies.userInLobby(id, username)) {
-      logger.warn({id, username}, '[WS] user tried to delete room when he\'s not in it')
+    if (!await lobbies.isOwner(id, username)) {
+      logger.warn({id, username}, '[WS] only lobby owners can delete lobbies')
       return
     }
+
     logger.info({id, username}, '[WS] delete_lobby')
-    await lobbies.delete(id)
+    await lobbies.delete({id})
     namespace.emit('lobby_deleted', id)
   })
 }

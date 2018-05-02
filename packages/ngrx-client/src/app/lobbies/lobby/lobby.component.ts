@@ -1,10 +1,15 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy, EventEmitter, Output } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { Lobby, selectSelectedLobby, AddEvent } from '../store';
+import { Lobby, selectSelectedLobby, AddEvent, LobbyEvent } from '../store';
 import { Store } from '@ngrx/store';
 import { tap, map } from 'rxjs/operators';
 import { selectAuthData } from '@app/auth';
 import { EmitWebsocketMessage } from '@app/websocket';
+
+interface MessageEvent {
+  id: string;
+  message: string;
+}
 
 @Component({
   selector: 'app-presentational-lobby',
@@ -18,13 +23,24 @@ export class PresentationalLobbyComponent {
   @Output() join = new EventEmitter<string>();
   @Output() leave = new EventEmitter<string>();
   @Output() delete = new EventEmitter<string>();
+  @Output() message = new EventEmitter<MessageEvent>();
+
+  scrolledEvents: LobbyEvent[];
 
   get inLobby(): boolean {
     return this.lobby.users.includes(this.username);
   }
 
+  get isOwner(): boolean {
+    return this.lobby.owner === this.username;
+  }
+
   get users(): string {
-    return this.lobby.users.join();
+    return this.lobby.users.join(', ');
+  }
+
+  sendMessage(message: string): void {
+    this.message.emit({id: this.lobby.id, message});
   }
 }
 
@@ -38,6 +54,7 @@ export class PresentationalLobbyComponent {
       (join)="onJoin($event)"
       (leave)="onLeave($event)"
       (delete)="onDelete($event)"
+      (message)="onMessage($event)"
     ></app-presentational-lobby>
   `
 })
@@ -57,5 +74,9 @@ export class LobbyComponent {
 
   onDelete(id: string): void {
     this.store.dispatch(new EmitWebsocketMessage('delete_lobby', {id}))
+  }
+
+  onMessage(event: MessageEvent) {
+    this.store.dispatch(new EmitWebsocketMessage('message_to_lobby', event))
   }
 }

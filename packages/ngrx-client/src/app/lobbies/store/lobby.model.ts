@@ -2,6 +2,7 @@ export interface CreateLobbyEvent {
   id: string;
   timestamp: number;
   event: 'create';
+  owner: string;
 }
 
 export interface JoinLobbyEvent {
@@ -35,6 +36,7 @@ export type LobbyEvent =
 export interface Lobby {
   id: string;
   name: string;
+  owner: string;
   users: string[],
   events: LobbyEvent[]
 }

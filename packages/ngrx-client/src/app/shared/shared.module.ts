@@ -5,6 +5,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { MaterialModule } from './material.module';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { VirtualScrollModule } from 'angular2-virtual-scroll';
+import { TextInputComponent } from './text-input/text-input.component';
 
 @NgModule({
   exports: [
@@ -13,10 +15,16 @@ import { HttpClientModule } from '@angular/common/http';
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    VirtualScrollModule,
+    TextInputComponent,
   ],
   imports: [
     BrowserModule,
     MaterialModule,
+    FormsModule,
+  ],
+  declarations: [
+    TextInputComponent,
   ],
 })
 export class SharedModule { }
