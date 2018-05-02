@@ -1,0 +1,45 @@
+.container {
+  height: 100%;
+
+  .page {
+    padding: 20px;
+
+    div[mat-card-avatar] {
+      display: flex;
+
+      mat-icon {
+        margin: auto;
+      }
+    }
+
+    mat-card-title {
+      * { display: inline-block; }
+
+      .lobby-name {
+        font-size: 20px;
+        font-weight: 500;
+      }
+
+      .lobby-id {
+        opacity: 0.8;
+      }
+    }
+  }
+}
+
+.spacer {
+  flex: 1;
+}
+
+virtual-scroll {
+  display: block;
+  height: 700px;
+
+  .event {
+    display: block;
+    width: 100%;
+    height: 45;
+    // background: linear-gradient(141deg, #0fb8ad 0%, #1fc8db 51%, #2cb5e8 75%);
+    // opacity: 0.8;
+  }
+}

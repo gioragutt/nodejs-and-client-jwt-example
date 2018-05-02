@@ -1,6 +1,6 @@
 import { AppPage } from './app.po';
 
-describe('hello-world1 App', () => {
+describe('ngrx-client App', () => {
   let page: AppPage;
 
   beforeEach(() => {

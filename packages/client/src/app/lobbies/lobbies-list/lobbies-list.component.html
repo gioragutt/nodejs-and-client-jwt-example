@@ -1,0 +1,12 @@
+<div class="container">
+  <app-text-input (submitText)="createLobby($event)" placeholder="Create Lobby" icon="group_add"></app-text-input>
+  <h1 *ngIf="lobbies.length === 0" class="mat-display-1 no-lobbies">
+    <div class="mat-headline">No lobbies!</div>
+    <div class="mat-subheading-2">Create one to start chatting!</div>
+  </h1>
+  <mat-nav-list>
+    <a mat-list-item [routerLink]="[lobby.id]" *ngFor="let lobby of lobbies">
+      {{lobby.name}} (Users: {{lobby.users.length}})
+    </a>
+  </mat-nav-list>
+</div>

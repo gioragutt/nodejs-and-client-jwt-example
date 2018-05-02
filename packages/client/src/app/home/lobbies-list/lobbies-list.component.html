@@ -1,9 +1,0 @@
-<ul>
-  <li *ngFor="let lobby of lobbies.lobbies$ | async">
-    <app-lobby-item
-      [lobby]="lobby"
-      [username]="username"
-      (joinOrLeave)="joinOrLeave(lobby.id, $event)"
-    ></app-lobby-item>
-  </li>
-</ul>

@@ -1,0 +1,8 @@
+<form (ngSubmit)="onFormSubmit()">
+  <mat-form-field>
+    <input matInput [placeholder]="placeholder" [(ngModel)]="text" name="name"/>
+    <button [disabled]="!text" matSuffix mat-icon-button type="submit">
+      <mat-icon>{{icon}}</mat-icon>
+    </button>
+  </mat-form-field>
+</form>

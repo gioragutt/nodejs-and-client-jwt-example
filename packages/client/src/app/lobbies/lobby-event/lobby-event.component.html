@@ -1,0 +1,17 @@
+<div class="container">
+  <div class="avatar">
+    <mat-icon>{{icon}}</mat-icon>
+  </div>
+  <div class="event">
+    <div class="header">
+      <div class="name">{{username}}</div>
+      <div class="timestamp">{{event.timestamp | date:'shortTime'}}</div>
+    </div>
+    <div class="content-wrapper">
+      <div class="content" [ngClass]="event.event">
+        {{message}}
+      </div>
+    </div>
+  </div>
+</div>
+<mat-divider></mat-divider>

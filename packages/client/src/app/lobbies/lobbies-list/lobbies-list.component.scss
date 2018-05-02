@@ -1,0 +1,15 @@
+.container {
+  min-width: 240px;
+
+  .no-lobbies {
+    text-align: center;
+  }
+
+  .create-form {
+    display: flex;
+
+    mat-form-field  {
+      margin: auto;
+    }
+  }
+}

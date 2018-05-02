@@ -1,0 +1,50 @@
+<mat-drawer-container class="container">
+  <mat-drawer mode="side" opened="true" position="end">Drawer content</mat-drawer>
+  <mat-drawer-content class="page">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          <div class="lobby-name">{{lobby.name}}</div>
+          <div class="lobby-id">(ID: <b>{{lobby.id}}</b>, Owner: <b>{{lobby.owner}}</b>)</div>
+        </mat-card-title>
+        <div mat-card-avatar *ngIf="!isOwner">
+          <button mat-icon-button
+            (click)="inLobby ? leave.emit(lobby.id) : join.emit(lobby.id)"
+            [matTooltip]="inLobby ? 'Leave the lobby' : 'Join the lobby'">
+            <mat-icon [color]="inLobby ? 'accent' : 'primary'">{{inLobby ? 'call_end' : 'call'}}</mat-icon>
+          </button>
+        </div>
+        <div mat-card-avatar *ngIf="isOwner" matTooltip="You're the owner!">
+          <mat-icon color="accent">supervisor_account</mat-icon>
+        </div>
+        <mat-card-subtitle *ngIf="lobby.users.length > 0">Connected users: {{users}}</mat-card-subtitle>
+        <mat-card-subtitle *ngIf="lobby.users.length === 0">No one is connected to this lobby! :(</mat-card-subtitle>
+        <div class="spacer"></div>
+          <button mat-icon-button (click)="delete.emit(lobby.id)" *ngIf="isOwner">
+          <mat-icon color="warn">delete</mat-icon>
+        </button>
+      </mat-card-header>
+      <mat-card-content>
+        <virtual-scroll
+          [items]="this.lobby.events"
+          [childHeight]="45"
+          (update)="scrolledEvents = $event"
+        >
+          <app-lobby-event
+            *ngFor="let event of scrolledEvents"
+            class="event"
+            [event]="event"
+            [lobby]="lobby"
+          ></app-lobby-event>
+        </virtual-scroll>
+      </mat-card-content>
+      <mat-card-footer>
+        <app-text-input
+          placeholder="Write message..."
+          icon="send"
+          (submitText)="sendMessage($event)"
+        ></app-text-input>
+      </mat-card-footer>
+    </mat-card>
+  </mat-drawer-content>
+</mat-drawer-container>

@@ -1,0 +1,37 @@
+import { Component, Input } from '@angular/core';
+import { LobbyEvent, Lobby } from '../store';
+
+@Component({
+  selector: 'app-lobby-event',
+  templateUrl: './lobby-event.component.html',
+  styleUrls: ['./lobby-event.component.scss']
+})
+export class LobbyEventComponent {
+  @Input() event: LobbyEvent;
+  @Input() lobby: Lobby;
+  static ICONS = {
+    'create': 'play_arrow',
+    'join': 'call',
+    'leave': 'call_end',
+    'message': 'message',
+  }
+
+  get message(): string {
+    switch (this.event.event) {
+      case 'create': return `created #${this.lobby.name}`;
+      case 'join': return `joined #${this.lobby.name}`;
+      case 'leave': return `left #${this.lobby.name}`;
+      case 'message': return this.event.message;
+    }
+  }
+
+  get username(): string {
+    return this.event.event !== 'create'
+      ? this.event.username
+      : this.event.owner;
+  }
+
+  get icon(): string {
+    return LobbyEventComponent.ICONS[this.event.event];
+  }
+}

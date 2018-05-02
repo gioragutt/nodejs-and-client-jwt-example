@@ -1,29 +1,43 @@
-import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
-import { SharedModule } from '@shared/shared.module';
-
-import { AuthComponent } from './auth/auth.component';
-import { LoggedInGuard } from './logged-in.guard';
-import { AuthFormComponent } from './auth-form/auth-form.component';
+import { NgModule, ModuleWithProviders } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ProfileComponent } from './profile/profile.component';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
+import { SharedModule } from '@app/shared';
+
+import { reducer, AuthEffects } from './store';
+import { AuthFormComponent } from './auth-form';
+import { AuthService } from './auth.service';
+import { LoginPageComponent } from './login-page.component';
+import { AuthRoutingModule } from './auth-routing.module';
+import * as authGuards from './guards';
 
 @NgModule({
   imports: [
+    CommonModule,
     SharedModule,
-    HttpClientModule,
+    AuthRoutingModule,
     ReactiveFormsModule,
+    StoreModule.forFeature('auth', reducer),
+    EffectsModule.forFeature([AuthEffects])
   ],
   declarations: [
-    AuthComponent,
     AuthFormComponent,
-    ProfileComponent,
+    LoginPageComponent,
   ],
   exports: [
-    ProfileComponent,
+    AuthFormComponent,
+    LoginPageComponent,
   ],
   providers: [
-    LoggedInGuard,
+    ...Object.values(authGuards)
   ],
 })
-export class AuthModule { }
+export class AuthModule {
+  static forRoot = (): ModuleWithProviders => ({
+    ngModule: AuthModule,
+    providers: [
+      AuthService,
+    ]
+  })
+}

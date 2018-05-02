@@ -24,7 +24,9 @@ const onDisconnection = username => async () => {
     if (!user.loggedIn) {
       logger.error(`User ${username} disconnected from WS when not logged in`)
     }
+
     await users.logout(username)
+    logger.info(`User ${username} disconnected from WS`)
   } catch (err) {
     logger.error({err}, 'socket disconnection error')
   }
