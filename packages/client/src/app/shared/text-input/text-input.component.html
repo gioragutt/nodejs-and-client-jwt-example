@@ -1,9 +1,6 @@
 <form (ngSubmit)="onFormSubmit()">
   <mat-form-field>
-    <input matInput (keydown)="onKeydown($event)"
-      [placeholder]="placeholder" [(ngModel)]="text"
-      name="name"
-    />
+    <input matInput [placeholder]="placeholder" [(ngModel)]="text" name="name"/>
     <button [disabled]="!text" matSuffix mat-icon-button type="submit">
       <mat-icon>{{icon}}</mat-icon>
     </button>
