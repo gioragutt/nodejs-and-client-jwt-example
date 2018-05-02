@@ -1,6 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
-html {
-  font-family: Roboto;
+html, body {
+  margin: 0;
+  height: 100%;
+  background: #fafafa;
+}
+
+.routed-component {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;    
+  height: 100%;
 }

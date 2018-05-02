@@ -7,8 +7,6 @@ const serverUrl = 'http://localhost:3000';
 
 export const environment = {
   production: false,
-  jwtStorageKey: '[AUTH] jwt',
-  profileStorageKey: '[AUTH] profile',
   serverUrl,
   apiBaseUrl: `${serverUrl}/api/v1`,
 };

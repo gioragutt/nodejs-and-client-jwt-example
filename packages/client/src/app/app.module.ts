@@ -1,30 +1,48 @@
+import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { AppComponent } from '@app/app.component';
-import { AuthModule } from '@app/auth';
-import { CoreModule } from '@app/core';
-import { SharedModule } from '@app/shared';
+import { StoreModule, Store } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { StoreRouterConnectingModule } from '@ngrx/router-store';
 
-import { AppRoutes } from './app.routes';
-import { ToolbarComponent } from './toolbar/toolbar.component';
+import { AuthModule, selectAuthState, AuthData, AUTH_DATA_STORAGE_KEY } from '@app/auth';
 import { LobbiesModule } from '@app/lobbies';
+import { NgrxRouterModule } from '@app/router';
+import { CoreModule } from '@app/core';
+import { WebsocketModule } from '@app/websocket';
+
+import { saveToStorage } from '@app/shared/storage';
+import { environment } from '@env/environment';
+
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ToolbarComponent,
   ],
   imports: [
-    BrowserAnimationsModule,
-    SharedModule,
-    AuthModule,
-    AppRoutes,
+    BrowserModule,
+    AppRoutingModule,
+    CoreModule,
     LobbiesModule,
-    CoreModule.forRoot(),
+    WebsocketModule.forRoot(),
+    StoreModule.forRoot({}),
+    EffectsModule.forRoot([]),
+    StoreRouterConnectingModule,
+    NgrxRouterModule,
+    AuthModule.forRoot(),
+    StoreDevtoolsModule.instrument(),
   ],
   providers: [],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(store: Store<any>) {
+    store.select<any>(selectAuthState).subscribe((authData: AuthData) => {
+      console.log('saving auth data to storage', authData);
+      saveToStorage(AUTH_DATA_STORAGE_KEY, authData);
+    })
+  }
+}

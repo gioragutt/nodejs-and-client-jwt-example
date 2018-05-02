@@ -12,10 +12,10 @@ export interface AuthFormData {
   styleUrls: ['./auth-form.component.scss'],
 })
 export class AuthFormComponent {
-  @Input() submitText: string;
+  @Input() submitText: string = '';
   @Output() submit: EventEmitter<AuthFormData> = new EventEmitter<AuthFormData>();
-  @Input() minPassowrdLength = 8;
-  @Input() minUsernameLength = 3;
+  @Input() minPasswordLength = 8;
+  @Input() minUsernameLength = 6;
 
   authData: FormGroup;
 
@@ -27,19 +27,22 @@ export class AuthFormComponent {
     return this.authData.get('password') as FormControl;
   }
 
+  get passwordHint(): string {
+    const length = this.password.value ? this.password.value.length : 0;
+    return length < this.minPasswordLength
+      ? `${length} / ${this.minPasswordLength}`
+      : 'Okay!'
+  }
+
   constructor(private builder: FormBuilder) {
     this.authData = builder.group({
-      username: ['', Validators.compose([
-        Validators.minLength(this.minUsernameLength), Validators.pattern(/^[a-zA-Z][a-zA-Z0-9_]*$/),
-      ])],
-      password: ['', Validators.compose([
-        Validators.required,
-        Validators.minLength(this.minPassowrdLength),
-      ])],
+      username: ['', Validators.pattern(`[a-zA-Z][a-zA-Z0-9_]{${this.minUsernameLength - 1},}`)],
+      password: ['', Validators.minLength(this.minPasswordLength)],
     });
   }
 
-  onSubmit() {
+  onSubmit(): void {
     this.submit.emit(this.authData.value);
+    this.authData.reset();
   }
 }

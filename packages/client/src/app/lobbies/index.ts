@@ -1,3 +1,4 @@
-export * from './lobbies.module'
-export * from './lobby-item/lobby-item.component'
-export * from './lobby-events-list/lobby-events-list.component'
+export * from './lobbies-home';
+export * from './lobbies.module';
+export * from './lobbies.service';
+export * from './store';

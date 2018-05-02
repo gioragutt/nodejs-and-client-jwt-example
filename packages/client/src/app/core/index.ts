@@ -1,2 +1,2 @@
-export * from './auth.service';
+export * from './toolbar/toolbar.component';
 export * from './core.module';
