@@ -4,7 +4,7 @@ import { AuthData } from './auth.models';
 import { AuthActions, AuthActionTypes } from './auth.actions';
 import { loadFromStorage } from '@app/shared/storage';
 
-export const AUTH_DATA_STORAGE_KEY = 'AUTH_DATA_STORAGE_KEY'
+export const AUTH_DATA_STORAGE_KEY = 'AUTH_DATA_STORAGE_KEY';
 
 export interface State {
   data: AuthData;
@@ -19,67 +19,55 @@ export const initialState: State = loadFromStorage(AUTH_DATA_STORAGE_KEY) || {
 };
 
 export function reducer(state = initialState, action: AuthActions): State {
-  switch(action.type) {
-    case (AuthActionTypes.Login): {
+  switch (action.type) {
+    case AuthActionTypes.Login: {
       return {
         ...state,
         loading: true,
       };
     }
 
-    case (AuthActionTypes.LoginSuccess): {
+    case AuthActionTypes.LoginSuccess: {
       return {
         ...state,
         loading: false,
         error: null,
-        data: action.authData
-      }
+        data: action.authData,
+      };
     }
 
-    case (AuthActionTypes.LoginFailure): {
+    case AuthActionTypes.LoginFailure: {
       return {
         ...state,
         loading: false,
         error: action.error,
         data: null,
-      }
+      };
     }
 
-    case (AuthActionTypes.Logout): {
+    case AuthActionTypes.Logout: {
       return {
         ...state,
         data: null,
         loading: false,
         error: null,
-      }
+      };
     }
   }
   return state;
 }
 
-export const selectAuthState = createFeatureSelector<State>('auth')
+export const selectAuthState = createFeatureSelector<State>('auth');
 
-export const selectAuthData = createSelector(
-  selectAuthState,
-  ({data}: State) => data,
-)
+export const selectAuthData = createSelector(selectAuthState, ({ data }: State) => data);
 
-export const selectToken = createSelector(
-  selectAuthData,
-  (data: AuthData) => data && data.token,
-)
+export const selectToken = createSelector(selectAuthData, (data: AuthData) => data && data.token);
 
-export const selectLoggedIn = createSelector(
-  selectAuthData,
-  (data: AuthData) => data !== null,
-)
+export const selectLoggedIn = createSelector(selectAuthData, (data: AuthData) => data !== null);
 
 export const selectAuthDataLoading = createSelector(
   selectAuthState,
-  ({loading}: State) => loading,
-)
+  ({ loading }: State) => loading,
+);
 
-export const selectAuthDataError = createSelector(
-  selectAuthState,
-  ({error}: State) => error,
-)
+export const selectAuthDataError = createSelector(selectAuthState, ({ error }: State) => error);

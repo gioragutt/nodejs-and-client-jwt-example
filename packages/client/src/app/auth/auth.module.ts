@@ -19,25 +19,15 @@ import * as authGuards from './guards';
     AuthRoutingModule,
     ReactiveFormsModule,
     StoreModule.forFeature('auth', reducer),
-    EffectsModule.forFeature([AuthEffects])
+    EffectsModule.forFeature([AuthEffects]),
   ],
-  declarations: [
-    AuthFormComponent,
-    LoginPageComponent,
-  ],
-  exports: [
-    AuthFormComponent,
-    LoginPageComponent,
-  ],
-  providers: [
-    ...Object.values(authGuards)
-  ],
+  declarations: [AuthFormComponent, LoginPageComponent],
+  exports: [AuthFormComponent, LoginPageComponent],
+  providers: [...Object.values(authGuards)],
 })
 export class AuthModule {
   static forRoot = (): ModuleWithProviders => ({
     ngModule: AuthModule,
-    providers: [
-      AuthService,
-    ]
+    providers: [AuthService],
   })
 }

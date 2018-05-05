@@ -36,10 +36,10 @@ export class ToolbarComponent {
   constructor(private store: Store<any>) { }
 
   login(): void {
-    this.store.dispatch(new NavigateTo({to: '/login'}))
+    this.store.dispatch(new NavigateTo({to: '/login'}));
   }
 
   logout(): void {
-    this.store.dispatch(new fromAuth.Logout())
+    this.store.dispatch(new fromAuth.Logout());
   }
 }

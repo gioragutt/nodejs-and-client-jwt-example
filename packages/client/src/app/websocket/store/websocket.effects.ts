@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { tap } from 'rxjs/operators';
+import { tap, filter, map } from 'rxjs/operators';
 import { WebsocketService } from '../websocket.service';
-import { WebsocketActionTypes, EmitWebsocketMessage } from './websocket.actions'
+import { WebsocketActionTypes, EmitWebsocketMessage, Error } from './websocket.actions';
+import { Logout } from '@app/auth';
 
 @Injectable()
 export class WebsocketEffects {
@@ -12,7 +13,14 @@ export class WebsocketEffects {
     tap(({event, args}: EmitWebsocketMessage) => {
       this.websocket.emit(event, ...args);
     }),
-  )
+  );
+
+ @Effect()
+  logoutOnJwtTokenExpiration$ = this.actions$.pipe(
+    ofType(WebsocketActionTypes.Error),
+    filter(({ error: { code } }: Error) => code === 'invalid_token'),
+    map(() => new Logout()),
+  );
 
   constructor(
     private actions$: Actions,

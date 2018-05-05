@@ -6,7 +6,6 @@ import { environment } from '@env/environment';
 
 @Injectable()
 export class LobbiesService {
-
   constructor(private http: HttpClient) {}
 
   fetchAll(): Observable<Lobby[]> {

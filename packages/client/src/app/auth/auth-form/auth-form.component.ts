@@ -12,7 +12,7 @@ export interface AuthFormData {
   styleUrls: ['./auth-form.component.scss'],
 })
 export class AuthFormComponent {
-  @Input() submitText: string = '';
+  @Input() submitText = '';
   @Output() submit: EventEmitter<AuthFormData> = new EventEmitter<AuthFormData>();
   @Input() minPasswordLength = 8;
   @Input() minUsernameLength = 6;
@@ -29,9 +29,7 @@ export class AuthFormComponent {
 
   get passwordHint(): string {
     const length = this.password.value ? this.password.value.length : 0;
-    return length < this.minPasswordLength
-      ? `${length} / ${this.minPasswordLength}`
-      : 'Okay!'
+    return length < this.minPasswordLength ? `${length} / ${this.minPasswordLength}` : 'Okay!';
   }
 
   constructor(private builder: FormBuilder) {

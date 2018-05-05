@@ -4,11 +4,11 @@ import { LoginPageComponent } from './login-page.component';
 import { AnonymousGuard } from './guards';
 
 const routes: Routes = [
-  { path: 'login', component: LoginPageComponent, canActivate: [AnonymousGuard] }
+  { path: 'login', component: LoginPageComponent, canActivate: [AnonymousGuard] },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AuthRoutingModule { }
+export class AuthRoutingModule {}

@@ -8,7 +8,7 @@ import { AuthData, selectLoggedIn } from '../store';
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(private store: Store<any>) { }
-  
+
   canActivate(): Observable<boolean> {
     return this.store.select(selectLoggedIn);
   }

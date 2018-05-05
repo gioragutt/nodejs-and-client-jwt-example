@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material.module';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -18,13 +18,7 @@ import { TextInputComponent } from './text-input/text-input.component';
     VirtualScrollModule,
     TextInputComponent,
   ],
-  imports: [
-    BrowserModule,
-    MaterialModule,
-    FormsModule,
-  ],
-  declarations: [
-    TextInputComponent,
-  ],
+  imports: [BrowserModule, MaterialModule, FormsModule],
+  declarations: [TextInputComponent],
 })
-export class SharedModule { }
+export class SharedModule {}

@@ -10,17 +10,15 @@ import { WebsocketService } from './websocket.service';
   imports: [
     CommonModule,
     StoreModule.forFeature('websocket', reducer),
-    EffectsModule.forFeature([WebsocketEffects])
+    EffectsModule.forFeature([WebsocketEffects]),
   ],
-  declarations: []
+  declarations: [],
 })
 export class WebsocketModule {
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: WebsocketModule,
-      providers: [
-        WebsocketService,
-      ],
+      providers: [WebsocketService],
     };
   }
 }

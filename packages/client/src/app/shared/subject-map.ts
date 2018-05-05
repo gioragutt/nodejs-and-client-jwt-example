@@ -1,4 +1,4 @@
-import { Subject } from "rxjs/Subject";
+import { Subject } from 'rxjs/Subject';
 
 export class SubjectMap {
   private subjects = new Map<string, Subject<any>>();

@@ -13,17 +13,23 @@ export const initialState: State = {
 
 export function reducer(state = initialState, action: WebsocketActions): State {
   switch (action.type) {
-    case WebsocketActionTypes.WebsocketConnectionChanged: {
-      return { ...state, ...action.payload };
+    case WebsocketActionTypes.Connect: {
+      return { ...state, connected: true, error: null };
+    }
+    case WebsocketActionTypes.Disconnect: {
+      return { ...state, connected: false };
+    }
+    case WebsocketActionTypes.Error: {
+      return { ...state, error: action.error };
     }
     default:
       return state;
   }
 }
 
-export const selectWebsocketState = createFeatureSelector('websocket')
+export const selectWebsocketState = createFeatureSelector('websocket');
 
 export const selectConnected = createSelector(
   selectWebsocketState,
   (state: State) => state.connected,
-)
+);

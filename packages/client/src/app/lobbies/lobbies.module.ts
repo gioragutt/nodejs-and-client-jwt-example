@@ -27,8 +27,6 @@ import { LobbyEventComponent } from './lobby-event/lobby-event.component';
     LobbyComponent,
     LobbyEventComponent,
   ],
-  providers: [
-    LobbiesService,
-  ]
+  providers: [LobbiesService],
 })
-export class LobbiesModule { }
+export class LobbiesModule {}

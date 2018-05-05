@@ -27,16 +27,12 @@ export interface MessageLobbyEvent {
   message: string;
 }
 
-export type LobbyEvent =
-  | CreateLobbyEvent
-  | JoinLobbyEvent
-  | LeaveLobbyEvent
-  | MessageLobbyEvent;
+export type LobbyEvent = CreateLobbyEvent | JoinLobbyEvent | LeaveLobbyEvent | MessageLobbyEvent;
 
 export interface Lobby {
   id: string;
   name: string;
   owner: string;
-  users: string[],
-  events: LobbyEvent[]
+  users: string[];
+  events: LobbyEvent[];
 }

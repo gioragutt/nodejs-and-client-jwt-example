@@ -14,7 +14,7 @@ export enum LobbyActionTypes {
   UpdateLobbies = '[Lobby] Update Lobbies',
   DeleteLobby = '[Lobby] Delete Lobby',
   DeleteLobbies = '[Lobby] Delete Lobbies',
-  ClearLobbies = '[Lobby] Clear Lobbies'
+  ClearLobbies = '[Lobby] Clear Lobbies',
 }
 
 export class FetchLobbies implements Action {
@@ -23,52 +23,52 @@ export class FetchLobbies implements Action {
 
 export class AddEvent implements Action {
   readonly type = LobbyActionTypes.AddEvent;
-  constructor(public payload: { event: LobbyEvent }) { }
+  constructor(public payload: { event: LobbyEvent }) {}
 }
 
 export class LoadLobbies implements Action {
   readonly type = LobbyActionTypes.LoadLobbies;
-  constructor(public payload: { lobbies: Lobby[] }) { }
+  constructor(public payload: { lobbies: Lobby[] }) {}
 }
 
 export class AddLobby implements Action {
   readonly type = LobbyActionTypes.AddLobby;
-  constructor(public payload: { lobby: Lobby }) { }
+  constructor(public payload: { lobby: Lobby }) {}
 }
 
 export class UpsertLobby implements Action {
   readonly type = LobbyActionTypes.UpsertLobby;
-  constructor(public payload: { lobby: Update<Lobby> }) { }
+  constructor(public payload: { lobby: Update<Lobby> }) {}
 }
 
 export class AddLobbies implements Action {
   readonly type = LobbyActionTypes.AddLobbies;
-  constructor(public payload: { lobbies: Lobby[] }) { }
+  constructor(public payload: { lobbies: Lobby[] }) {}
 }
 
 export class UpsertLobbies implements Action {
   readonly type = LobbyActionTypes.UpsertLobbies;
-  constructor(public payload: { lobbies: Update<Lobby>[] }) { }
+  constructor(public payload: { lobbies: Update<Lobby>[] }) {}
 }
 
 export class UpdateLobby implements Action {
   readonly type = LobbyActionTypes.UpdateLobby;
-  constructor(public payload: { lobby: Update<Lobby> }) { }
+  constructor(public payload: { lobby: Update<Lobby> }) {}
 }
 
 export class UpdateLobbies implements Action {
   readonly type = LobbyActionTypes.UpdateLobbies;
-  constructor(public payload: { lobbies: Update<Lobby>[] }) { }
+  constructor(public payload: { lobbies: Update<Lobby>[] }) {}
 }
 
 export class DeleteLobby implements Action {
   readonly type = LobbyActionTypes.DeleteLobby;
-  constructor(public payload: { id: string }) { }
+  constructor(public payload: { id: string }) {}
 }
 
 export class DeleteLobbies implements Action {
   readonly type = LobbyActionTypes.DeleteLobbies;
-  constructor(public payload: { ids: string[] }) { }
+  constructor(public payload: { ids: string[] }) {}
 }
 
 export class ClearLobbies implements Action {

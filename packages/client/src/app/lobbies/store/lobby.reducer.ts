@@ -21,13 +21,16 @@ export const initialState: State = adapter.getInitialState({
 export function reducer(state = initialState, action: LobbyActions): State {
   switch (action.type) {
     case LobbyActionTypes.AddEvent: {
-      const {event} = action.payload;
+      const { event } = action.payload;
       const lobby = state.entities[event.id];
-      const updatedLobby = eventReducer({
-        ...lobby,
-        events: [...lobby.events, event]
-      }, event)
-      return adapter.updateOne({id: event.id, changes: updatedLobby}, state);
+      const updatedLobby = eventReducer(
+        {
+          ...lobby,
+          events: [...lobby.events, event],
+        },
+        event,
+      );
+      return adapter.updateOne({ id: event.id, changes: updatedLobby }, state);
     }
 
     case LobbyActionTypes.AddLobby: {
@@ -86,5 +89,5 @@ export const {
 export const selectSelectedLobby = createSelector(
   selectLobbyEntities,
   selectRouterState,
-  (lobbies, router): Lobby => lobbies[router.state.params.lobbyId]
-)
+  (lobbies, router): Lobby => lobbies[router.state.params.lobbyId],
+);

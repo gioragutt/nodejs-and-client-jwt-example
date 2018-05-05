@@ -3,14 +3,14 @@ import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 @Component({
   selector: 'app-text-input',
   templateUrl: './text-input.component.html',
-  styleUrls: ['./text-input.component.scss']
+  styleUrls: ['./text-input.component.scss'],
 })
 export class TextInputComponent {
-  @Input() placeholder: string = '';
-  @Input() icon: string = '';
+  @Input() placeholder = '';
+  @Input() icon = '';
   @Output() submitText = new EventEmitter<string>();
-  
-  text: string = '';
+
+  text = '';
 
   onFormSubmit(): void {
     const submittedText = this.text && this.text.trim();

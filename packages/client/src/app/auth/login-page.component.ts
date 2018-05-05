@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 
 import { AuthFormData } from './auth-form';
-import * as authStore from './store'
+import * as authStore from './store';
 
 @Component({
   selector: 'app-login-page',
