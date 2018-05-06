@@ -41,6 +41,7 @@ import {
   MatToolbarModule,
   MatTooltipModule,
   MatFormFieldModule,
+  MatDividerModule,
 } from '@angular/material';
 
 @NgModule({
@@ -87,6 +88,7 @@ import {
     MatTooltipModule,
     MatNativeDateModule,
     MatFormFieldModule,
+    MatDividerModule,
   ],
 })
 export class MaterialModule {}

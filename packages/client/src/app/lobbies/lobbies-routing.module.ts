@@ -9,7 +9,11 @@ const routes: Routes = [
     path: 'lobbies',
     canActivate: [AuthGuard],
     component: LobbiesHomeComponent,
-    children: [{ path: ':lobbyId', component: LobbyComponent }],
+  },
+  {
+    path: 'lobbies/:lobbyId',
+    component: LobbyComponent,
+    canActivate: [AuthGuard],
   },
 ];
 

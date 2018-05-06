@@ -4,12 +4,20 @@
       <div class="lobby-name">{{lobby.name}}</div>
       <div class="lobby-id">(ID: <b>{{lobby.id}}</b>, Owner: <b>{{lobby.owner}}</b>)</div>
     </mat-card-title>
-    <div mat-card-avatar *ngIf="!isOwner">
+    <div mat-card-avatar>
       <button mat-icon-button
-        (click)="inLobby ? leave.emit(lobby.id) : join.emit(lobby.id)"
-        [matTooltip]="inLobby ? 'Leave the lobby' : 'Join the lobby'">
-        <mat-icon [color]="inLobby ? 'accent' : 'primary'">{{inLobby ? 'call_end' : 'call'}}</mat-icon>
+        matTooltip="Back to the lobbies"
+        [routerLink]="['..']">
+        <mat-icon>arrow_back</mat-icon>
       </button>
+      <ng-container *ngIf="!isOwner">
+        <mat-divider [vertical]="true"></mat-divider>
+        <button mat-icon-button
+          (click)="inLobby ? leave.emit(lobby.id) : join.emit(lobby.id)"
+          [matTooltip]="inLobby ? 'Leave the lobby' : 'Join the lobby'">
+          <mat-icon [color]="inLobby ? 'accent' : 'primary'">{{inLobby ? 'call_end' : 'call'}}</mat-icon>
+        </button>
+      </ng-container>
     </div>
     <div mat-card-avatar *ngIf="isOwner" matTooltip="You're the owner!">
       <mat-icon color="accent">supervisor_account</mat-icon>
