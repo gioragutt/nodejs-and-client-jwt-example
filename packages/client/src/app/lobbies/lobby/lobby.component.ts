@@ -5,13 +5,16 @@ import {
   ChangeDetectionStrategy,
   EventEmitter,
   Output,
+  ViewChild,
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Lobby, selectSelectedLobby, AddEvent, LobbyEvent } from '../store';
 import { Store } from '@ngrx/store';
-import { tap, map } from 'rxjs/operators';
+import { tap, map, distinctUntilChanged, filter } from 'rxjs/operators';
 import { selectAuthData } from '@app/auth';
 import { EmitWebsocketMessage } from '@app/websocket';
+import { VirtualScrollComponent } from 'angular2-virtual-scroll';
+import { last } from 'lodash';
 
 interface MessageEvent {
   id: string;
@@ -31,8 +34,20 @@ export class PresentationalLobbyComponent {
   @Output() leave = new EventEmitter<string>();
   @Output() delete = new EventEmitter<string>();
   @Output() message = new EventEmitter<MessageEvent>();
+  @Output() scrollToBottomOnChange = new EventEmitter<boolean>();
+
+  _shouldScrollToBottom = false;
+  set shouldScrollToBottom(value: boolean) {
+    this._shouldScrollToBottom = value;
+    this.scrollToBottomOnChange.emit(value);
+  }
+  get shouldScrollToBottom(): boolean {
+    return this._shouldScrollToBottom;
+  }
 
   scrolledEvents: LobbyEvent[];
+
+  @ViewChild(VirtualScrollComponent) private virtualScroll: VirtualScrollComponent;
 
   get inLobby(): boolean {
     return this.lobby.users.includes(this.username);
@@ -49,12 +64,17 @@ export class PresentationalLobbyComponent {
   sendMessage(message: string): void {
     this.message.emit({ id: this.lobby.id, message });
   }
+
+  public scrollToBottom(): void {
+    this.virtualScroll.scrollInto(last(this.lobby.events));
+  }
 }
 
 @Component({
   selector: 'app-lobby',
   template: `
     <app-presentational-lobby
+      #theLobby
       *ngIf="lobby$ | async as lobby"
       [lobby]="lobby"
       [username]="username$ | async"
@@ -62,14 +82,32 @@ export class PresentationalLobbyComponent {
       (leave)="onLeave($event)"
       (delete)="onDelete($event)"
       (message)="onMessage($event)"
+      (scrollToBottomOnChange)="onScrollToBottomOnChange($event)"
     ></app-presentational-lobby>
   `,
 })
-export class LobbyComponent {
-  lobby$ = this.store.select(selectSelectedLobby);
+export class LobbyComponent implements OnInit {
+  lobby$ = this.store.select(selectSelectedLobby).pipe(filter(lobby => !!lobby));
   username$ = this.store.select(selectAuthData).pipe(map(data => data && data.profile.username));
+  scrollToBottomOnChange = true;
+
+  @ViewChild('theLobby')
+  private lobby: PresentationalLobbyComponent;
 
   constructor(private store: Store<any>) {}
+
+  ngOnInit(): void {
+    this.lobby$.pipe(
+      map(lobby => lobby.events.length),
+      distinctUntilChanged(),
+    ).subscribe(() => this.scrollToBottom());
+  }
+
+  scrollToBottom(): void {
+    if (this.lobby && this.scrollToBottomOnChange) {
+      this.lobby.scrollToBottom();
+    }
+  }
 
   onJoin(id: string): void {
     this.store.dispatch(new EmitWebsocketMessage('join_lobby', { id }));
@@ -85,5 +123,12 @@ export class LobbyComponent {
 
   onMessage(event: MessageEvent) {
     this.store.dispatch(new EmitWebsocketMessage('message_to_lobby', event));
+  }
+
+  onScrollToBottomOnChange(change: boolean): void {
+    this.scrollToBottomOnChange = change;
+    if (this.scrollToBottomOnChange) {
+      this.scrollToBottom();
+    }
   }
 }

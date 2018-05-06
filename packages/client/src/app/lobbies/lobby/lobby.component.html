@@ -39,6 +39,9 @@
         </virtual-scroll>
       </mat-card-content>
       <mat-card-footer>
+        <mat-checkbox [(ngModel)]="shouldScrollToBottom">
+          Scroll On New Message?
+        </mat-checkbox>
         <app-text-input
           placeholder="Write message..."
           icon="send"
