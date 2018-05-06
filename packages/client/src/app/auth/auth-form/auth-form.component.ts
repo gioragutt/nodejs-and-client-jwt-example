@@ -13,9 +13,10 @@ export interface AuthFormData {
 })
 export class AuthFormComponent {
   @Input() submitText = '';
-  @Output() submit: EventEmitter<AuthFormData> = new EventEmitter<AuthFormData>();
+  @Input() error = '';
   @Input() minPasswordLength = 8;
   @Input() minUsernameLength = 6;
+  @Output() submit: EventEmitter<AuthFormData> = new EventEmitter<AuthFormData>();
 
   authData: FormGroup;
 

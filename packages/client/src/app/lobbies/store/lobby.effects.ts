@@ -9,11 +9,14 @@ import {
   take,
   distinctUntilChanged,
   filter,
+  withLatestFrom,
+  tap,
 } from 'rxjs/operators';
 import { merge } from 'rxjs/observable/merge';
 
 import * as fromWebsocket from '@app/websocket';
 import * as fromLobby from './lobby.actions';
+import { selectLobbyIdFromParams } from './lobby.reducer';
 
 import { LobbiesService } from '../lobbies.service';
 import {
@@ -24,6 +27,8 @@ import {
   LobbyEvent,
 } from './lobby.model';
 import { Store } from '@ngrx/store';
+import { of } from 'rxjs/observable/of';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class LobbyEffects {
@@ -33,6 +38,14 @@ export class LobbyEffects {
     switchMap(() => this.lobbies.fetchAll()),
     map(lobbies => new fromLobby.LoadLobbies({ lobbies })),
     retryWhen(errors => errors.pipe(delay(1000), take(5))),
+  );
+
+  @Effect({ dispatch: false })
+  routeToLobbiesWhenSelectedLobbyDeleted = this.actions$.pipe(
+    ofType(fromLobby.LobbyActionTypes.DeleteLobby),
+    withLatestFrom(this.store.select(selectLobbyIdFromParams)),
+    filter(([action, lobbyId]: [fromLobby.DeleteLobby, string]) => action.payload.id === lobbyId),
+    tap(() => this.router.navigate(['/lobbies'])),
   );
 
   @Effect()
@@ -45,6 +58,7 @@ export class LobbyEffects {
     private actions$: Actions,
     private lobbies: LobbiesService,
     private websocket: fromWebsocket.WebsocketService,
+    private router: Router,
     private store: Store<any>,
   ) {
     this.websocket.on<Lobby>('lobby_created').subscribe(lobby => {

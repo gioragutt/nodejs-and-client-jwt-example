@@ -8,19 +8,26 @@ import * as authStore from './store';
   selector: 'app-login-page',
   template: `
     <div class="container">
-      <app-auth-form submitText="login" (submit)="onSubmit($event)"></app-auth-form>
+      <app-auth-form
+        submitText="login"
+        (submit)="onSubmit($event)"
+        [error]="error$ | async"
+      ></app-auth-form>
     </div>
   `,
-  styles: [`
+  styles: [
+    `
     .container {
       max-width: 600px;
       margin: auto;
     }
-  `],
+  `,
+  ],
 })
 export class LoginPageComponent {
-  constructor(private store: Store<authStore.State>) {
-  }
+  error$ = this.store.select(authStore.selectAuthDataError);
+
+  constructor(private store: Store<authStore.State>) {}
 
   onSubmit(event: AuthFormData | Event) {
     if (!event || event instanceof Event) {

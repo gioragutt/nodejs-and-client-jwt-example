@@ -17,14 +17,12 @@ import { environment } from '@env/environment';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { omit } from 'lodash';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     CoreModule,
     LobbiesModule,
     WebsocketModule.forRoot(),
@@ -34,15 +32,16 @@ import { AppComponent } from './app.component';
     NgrxRouterModule,
     AuthModule.forRoot(),
     StoreDevtoolsModule.instrument(),
+    AppRoutingModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {
   constructor(store: Store<any>) {
     store.select<any>(selectAuthState).subscribe((authData: AuthData) => {
-      console.log('saving auth data to storage', authData);
+      console.log('saving auth data to storage', omit(authData, ['error']));
       saveToStorage(AUTH_DATA_STORAGE_KEY, authData);
-    })
+    });
   }
 }

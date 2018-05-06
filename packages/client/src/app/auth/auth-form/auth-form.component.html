@@ -1,11 +1,12 @@
 <form [formGroup]="authData" class="container" #authForm="ngForm" (ngSubmit)="onSubmit()">
   <mat-form-field floatLabel="username" class="field">
     <mat-label>Username</mat-label>
-    <input matInput placeholder="Username" formControlName="username">
+    <input matInput placeholder="Username" formControlName="username" required>
+    <mat-error>{{error}}</mat-error>
   </mat-form-field>
   <mat-form-field floatLabel="password" class="field">
     <mat-label>Password</mat-label>
-    <input matInput type="password" placeholder="Password" formControlName="password">
+    <input matInput type="password" placeholder="Password" formControlName="password" required>
     <mat-hint align="end">{{passwordHint}}</mat-hint>
   </mat-form-field>
   <button mat-raised-button color="primary" [disabled]="authForm.pristine || authForm.invalid">

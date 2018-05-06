@@ -3,6 +3,7 @@ import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { AuthData } from './auth.models';
 import { AuthActions, AuthActionTypes } from './auth.actions';
 import { loadFromStorage } from '@app/shared/storage';
+import { get } from 'lodash';
 
 export const AUTH_DATA_STORAGE_KEY = 'AUTH_DATA_STORAGE_KEY';
 
@@ -24,6 +25,7 @@ export function reducer(state = initialState, action: AuthActions): State {
       return {
         ...state,
         loading: true,
+        error: null,
       };
     }
 
@@ -40,7 +42,7 @@ export function reducer(state = initialState, action: AuthActions): State {
       return {
         ...state,
         loading: false,
-        error: action.error,
+        error: get(action.error, 'error.message'),
         data: null,
       };
     }

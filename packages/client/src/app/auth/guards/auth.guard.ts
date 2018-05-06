@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate } from '@angular/router';
+import { CanActivate, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { map, tap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
@@ -7,9 +7,15 @@ import { AuthData, selectLoggedIn } from '../store';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private store: Store<any>) { }
+  constructor(private store: Store<any>, private router: Router) { }
 
   canActivate(): Observable<boolean> {
-    return this.store.select(selectLoggedIn);
+    return this.store.select(selectLoggedIn).pipe(tap(this.navigateToLoginIfLoggedOut));
+  }
+
+  private navigateToLoginIfLoggedOut = (loggedIn) => {
+    if (!loggedIn) {
+      this.router.navigate(['/login']);
+    }
   }
 }

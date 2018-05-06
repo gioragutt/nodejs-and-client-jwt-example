@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-const routes: Routes = [{ path: '', redirectTo: '/lobbies', pathMatch: 'full' }];
+const routes: Routes = [{ path: '**', redirectTo: '/lobbies', pathMatch: 'full' }];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

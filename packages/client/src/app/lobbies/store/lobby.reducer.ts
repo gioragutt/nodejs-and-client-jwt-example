@@ -86,8 +86,13 @@ export const {
   selectTotal: selectTotalLobbies,
 } = adapter.getSelectors(createFeatureSelector('lobbies'));
 
+export const selectLobbyIdFromParams = createSelector(
+  selectRouterState,
+  router => router && router.state.params.lobbyId,
+);
+
 export const selectSelectedLobby = createSelector(
   selectLobbyEntities,
-  selectRouterState,
-  (lobbies, router): Lobby => lobbies[router.state.params.lobbyId],
+  selectLobbyIdFromParams,
+  (lobbies, lobbyId): Lobby => lobbyId && lobbies[lobbyId],
 );
