@@ -9,7 +9,6 @@ import * as authActions from './auth.actions';
 import { AuthService } from '../auth.service';
 import { AuthData } from './auth.models';
 import { Router } from '@angular/router';
-import { NavigateTo } from '@app/router';
 import { Observable } from 'rxjs/Observable';
 
 @Injectable()
@@ -22,16 +21,16 @@ export class AuthEffects {
     catchError(error => of(new authActions.LoginFailure(error))),
   );
 
-  @Effect()
+  @Effect({dispatch: false})
   redirectAfterLogin$ = this.actions$.pipe(
     ofType(authActions.AuthActionTypes.LoginSuccess),
-    map(() => new NavigateTo({ to: '/lobbies' })),
+    tap(() => this.router.navigate(['/lobbies'])),
   );
 
-  @Effect()
+  @Effect({dispatch: false})
   redirectAfterLogout$ = this.actions$.pipe(
     ofType(authActions.AuthActionTypes.Logout),
-    map(() => new NavigateTo({ to: '/login' })),
+    tap(() => this.router.navigate(['/login'])),
   );
 
   // @Effect({ dispatch: false })
@@ -39,5 +38,9 @@ export class AuthEffects {
   //   tap(action => console.log('got action', action))
   // )
 
-  constructor(private actions$: Actions, private auth: AuthService, private router: Router) {}
+  constructor(
+    private actions$: Actions,
+    private auth: AuthService,
+    private router: Router,
+  ) { }
 }

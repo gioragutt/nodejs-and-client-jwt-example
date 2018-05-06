@@ -2,8 +2,8 @@ import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from 
 import { Store } from '@ngrx/store';
 import * as fromAuth from '@app/auth';
 import { Observable } from 'rxjs/Observable';
-import { NavigateTo } from '@app/router';
 import * as fromWebsocket from '@app/websocket';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-presentational-toolbar',
@@ -33,10 +33,10 @@ export class ToolbarComponent {
   authState$ = this.store.select(fromAuth.selectAuthState);
   websocketConnected$ = this.store.select(fromWebsocket.selectConnected);
 
-  constructor(private store: Store<any>) { }
+  constructor(private store: Store<any>, private router: Router) { }
 
   login(): void {
-    this.store.dispatch(new NavigateTo({to: '/login'}));
+    this.router.navigate(['/login']);
   }
 
   logout(): void {
