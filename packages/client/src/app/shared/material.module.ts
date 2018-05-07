@@ -42,6 +42,8 @@ import {
   MatTooltipModule,
   MatFormFieldModule,
   MatDividerModule,
+  MatPaginatorModule,
+  MatSortModule,
 } from '@angular/material';
 
 @NgModule({
@@ -89,6 +91,8 @@ import {
     MatNativeDateModule,
     MatFormFieldModule,
     MatDividerModule,
+    MatPaginatorModule,
+    MatSortModule,
   ],
 })
 export class MaterialModule {}

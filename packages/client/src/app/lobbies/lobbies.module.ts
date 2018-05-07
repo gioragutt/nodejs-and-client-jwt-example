@@ -11,6 +11,7 @@ import { reducer, LobbyEffects } from './store';
 import { LobbiesListComponent } from './lobbies-list';
 import { LobbyComponent, PresentationalLobbyComponent } from './lobby';
 import { LobbyEventComponent } from './lobby-event';
+import { LobbiesHomeComponent } from './lobbies-home/lobbies-home.component';
 
 @NgModule({
   imports: [
@@ -26,6 +27,7 @@ import { LobbyEventComponent } from './lobby-event';
     PresentationalLobbyComponent,
     LobbyComponent,
     LobbyEventComponent,
+    LobbiesHomeComponent,
   ],
   providers: [LobbiesService],
 })
