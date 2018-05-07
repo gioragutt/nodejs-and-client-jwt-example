@@ -10,20 +10,17 @@
         [routerLink]="['..']">
         <mat-icon>arrow_back</mat-icon>
       </button>
-      <ng-container *ngIf="!isOwner">
-        <mat-divider [vertical]="true"></mat-divider>
-        <button mat-icon-button
-          (click)="inLobby ? leave.emit(lobby.id) : join.emit(lobby.id)"
-          [matTooltip]="inLobby ? 'Leave the lobby' : 'Join the lobby'">
-          <mat-icon [color]="inLobby ? 'accent' : 'primary'">{{inLobby ? 'call_end' : 'call'}}</mat-icon>
-        </button>
-      </ng-container>
+    </div>
+    <div mat-card-avatar *ngIf="!isOwner" [matTooltip]="inLobby ? 'Leave the lobby' : 'Join the lobby'">
+      <button mat-icon-button
+        (click)="inLobby ? leave.emit(lobby.id) : join.emit(lobby.id)">
+        <mat-icon [color]="inLobby ? 'accent' : 'primary'">{{inLobby ? 'call_end' : 'call'}}</mat-icon>
+      </button>
     </div>
     <div mat-card-avatar *ngIf="isOwner" matTooltip="You're the owner!">
       <mat-icon color="accent">supervisor_account</mat-icon>
     </div>
-    <mat-card-subtitle *ngIf="lobby.users.length > 0">Connected users: {{users}}</mat-card-subtitle>
-    <mat-card-subtitle *ngIf="lobby.users.length === 0">No one is connected to this lobby! :(</mat-card-subtitle>
+    <mat-card-subtitle>Connected users: {{users}}</mat-card-subtitle>
     <div class="spacer"></div>
       <button mat-icon-button (click)="delete.emit(lobby.id)" *ngIf="isOwner">
       <mat-icon color="warn">delete</mat-icon>

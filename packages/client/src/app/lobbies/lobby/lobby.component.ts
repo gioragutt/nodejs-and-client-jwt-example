@@ -10,11 +10,13 @@ import {
 import { Observable } from 'rxjs';
 import { Lobby, selectRoutedLobby, AddEvent, LobbyEvent } from '../store';
 import { Store } from '@ngrx/store';
-import { tap, map, distinctUntilChanged, filter } from 'rxjs/operators';
+import { tap, map, filter } from 'rxjs/operators';
 import { selectAuthData } from '@app/auth';
 import { EmitWebsocketMessage } from '@app/websocket';
 import { VirtualScrollComponent } from 'angular2-virtual-scroll';
 import { last } from 'lodash';
+
+import * as utils from '../utils';
 
 interface MessageEvent {
   id: string;
@@ -50,11 +52,11 @@ export class PresentationalLobbyComponent {
   @ViewChild(VirtualScrollComponent) private virtualScroll: VirtualScrollComponent;
 
   get inLobby(): boolean {
-    return this.lobby.users.includes(this.username);
+    return utils.isInLobby(this.lobby, this.username);
   }
 
   get isOwner(): boolean {
-    return this.lobby.owner === this.username;
+    return utils.isOwner(this.lobby, this.username);
   }
 
   get users(): string {
@@ -91,16 +93,12 @@ export class LobbyComponent implements OnInit {
   username$ = this.store.select(selectAuthData).pipe(map(data => data && data.profile.username));
   scrollToBottomOnChange = true;
 
-  @ViewChild('theLobby')
-  private lobby: PresentationalLobbyComponent;
+  @ViewChild('theLobby') private lobby: PresentationalLobbyComponent;
 
   constructor(private store: Store<any>) {}
 
   ngOnInit(): void {
-    this.lobby$.pipe(
-      map(lobby => lobby.events.length),
-      distinctUntilChanged(),
-    ).subscribe(() => this.scrollToBottom());
+    this.lobby$.pipe(map(lobby => lobby.events.length)).subscribe(() => this.scrollToBottom());
   }
 
   scrollToBottom(): void {
