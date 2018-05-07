@@ -49,7 +49,7 @@ export class LobbyEffects {
 
   @Effect()
   fetchOnWebsocketReconnection$ = this.actions$.pipe(
-    ofType(fromWebsocket.WebsocketActionTypes.Connect),
+    ofType(fromWebsocket.WebsocketActionTypes.Connected),
     map(() => new fromLobby.FetchLobbies()),
   );
 

@@ -13,10 +13,10 @@ export const initialState: State = {
 
 export function reducer(state = initialState, action: WebsocketActions): State {
   switch (action.type) {
-    case WebsocketActionTypes.Connect: {
+    case WebsocketActionTypes.Connected: {
       return { ...state, connected: true, error: null };
     }
-    case WebsocketActionTypes.Disconnect: {
+    case WebsocketActionTypes.Disconnected: {
       return { ...state, connected: false };
     }
     case WebsocketActionTypes.Error: {

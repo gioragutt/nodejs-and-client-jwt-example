@@ -63,8 +63,8 @@ export class WebsocketService {
     this.socket = connect(environment.serverUrl, { query: { token } });
     this.socket.on('error', error => this.store.dispatch(new fromWs.Error(error)));
     this.socket.on('connect', () => {
-      this.store.dispatch(new fromWs.Connect());
-      this.socket.on('disconnect', () => this.store.dispatch(new fromWs.Disconnect()));
+      this.store.dispatch(new fromWs.Connected());
+      this.socket.on('disconnect', () => this.store.dispatch(new fromWs.Disconnected()));
       this.socket.on('message', msg => console.log('message', { msg }));
     });
   }

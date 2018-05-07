@@ -1,18 +1,18 @@
 import { Action } from '@ngrx/store';
 
 export enum WebsocketActionTypes {
-  Connect = '[Websocket] Connect',
-  Disconnect = '[Websocket] Disconnect',
+  Connected = '[Websocket] Connected',
+  Disconnected = '[Websocket] Disconnected',
   Error = '[Websocket] Error',
   EmitWebsocketMessage = '[Websocket] Emit Websocket Message',
 }
 
-export class Connect implements Action {
-  readonly type = WebsocketActionTypes.Connect;
+export class Connected implements Action {
+  readonly type = WebsocketActionTypes.Connected;
 }
 
-export class Disconnect implements Action {
-  readonly type = WebsocketActionTypes.Disconnect;
+export class Disconnected implements Action {
+  readonly type = WebsocketActionTypes.Disconnected;
 }
 
 export class Error implements Action {
@@ -28,4 +28,4 @@ export class EmitWebsocketMessage implements Action {
   }
 }
 
-export type WebsocketActions = Connect | Disconnect | Error | EmitWebsocketMessage;
+export type WebsocketActions = Connected | Disconnected | Error | EmitWebsocketMessage;
