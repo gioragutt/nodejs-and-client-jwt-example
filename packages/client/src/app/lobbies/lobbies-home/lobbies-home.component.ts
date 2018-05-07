@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort } from '@angular/material';
 import { LobbiesHomeDataSource } from './lobbies-home-datasource';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-lobbies-home',
@@ -13,9 +14,11 @@ export class LobbiesHomeComponent implements OnInit {
   dataSource: LobbiesHomeDataSource;
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = ['id', 'name'];
+  displayedColumns = ['id', 'name', 'owner', 'connectedUsers', 'actions'];
+
+  constructor(private store: Store<any>) {}
 
   ngOnInit() {
-    this.dataSource = new LobbiesHomeDataSource(this.paginator, this.sort);
+    this.dataSource = new LobbiesHomeDataSource(this.paginator, this.sort, this.store);
   }
 }
