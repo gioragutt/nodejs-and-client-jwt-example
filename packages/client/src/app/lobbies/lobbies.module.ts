@@ -5,7 +5,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { SharedModule } from '@app/shared';
 
 import { LobbiesService } from './lobbies.service';
-import { LobbiesHomeComponent } from './lobbies-home';
+import { LobbiesShellComponent } from './lobbies-shell';
 import { LobbiesRoutingModule } from './lobbies-routing.module';
 import { reducer, LobbyEffects } from './store';
 import { LobbiesListComponent } from './lobbies-list/lobbies-list.component';
@@ -21,7 +21,7 @@ import { LobbyEventComponent } from './lobby-event/lobby-event.component';
     EffectsModule.forFeature([LobbyEffects]),
   ],
   declarations: [
-    LobbiesHomeComponent,
+    LobbiesShellComponent,
     LobbiesListComponent,
     PresentationalLobbyComponent,
     LobbyComponent,

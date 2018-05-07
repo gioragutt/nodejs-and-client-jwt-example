@@ -5,11 +5,11 @@ import { Store } from '@ngrx/store';
 import { tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-lobbies-home',
-  templateUrl: './lobbies-home.component.html',
-  styleUrls: ['./lobbies-home.component.scss'],
+  selector: 'app-lobbies-shell',
+  templateUrl: './lobbies-shell.component.html',
+  styleUrls: ['./lobbies-shell.component.scss'],
 })
-export class LobbiesHomeComponent {
+export class LobbiesShellComponent {
   @HostBinding('class') hostClass = 'routed-component';
   lobbies$: Observable<Lobby[]>;
   constructor(private store: Store<any>) {
