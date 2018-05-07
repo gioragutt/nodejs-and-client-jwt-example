@@ -8,9 +8,9 @@ import { LobbiesService } from './lobbies.service';
 import { LobbiesShellComponent } from './lobbies-shell';
 import { LobbiesRoutingModule } from './lobbies-routing.module';
 import { reducer, LobbyEffects } from './store';
-import { LobbiesListComponent } from './lobbies-list/lobbies-list.component';
-import { LobbyComponent, PresentationalLobbyComponent } from './lobby/lobby.component';
-import { LobbyEventComponent } from './lobby-event/lobby-event.component';
+import { LobbiesListComponent } from './lobbies-list';
+import { LobbyComponent, PresentationalLobbyComponent } from './lobby';
+import { LobbyEventComponent } from './lobby-event';
 
 @NgModule({
   imports: [
