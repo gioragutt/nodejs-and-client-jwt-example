@@ -79,7 +79,9 @@ module.exports = async (namespace, socket, username) => {
     logger.info({id, username}, '[WS] delete_lobby')
     await lobbies.delete({id})
 
-    namespace.clients(id).forEach(s => s.leave(id))
+    Object.keys(namespace.adapter.rooms[id].sockets)
+      .map(socketId => namespace.connected[socketId])
+      .forEach(s => s.leave(id))
     namespace.emit('lobby_deleted', id)
   })
 }
