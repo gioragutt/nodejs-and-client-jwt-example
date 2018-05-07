@@ -7,9 +7,9 @@ export enum LobbyActionTypes {
   AddEvent = '[Lobby] Add Event',
   LoadLobbies = '[Lobby] Load Lobbies',
   AddLobby = '[Lobby] Add Lobby',
-  UpsertLobby = '[Lobby] Upsert Lobby',
+  // UpsertLobby = '[Lobby] Upsert Lobby',
   AddLobbies = '[Lobby] Add Lobbies',
-  UpsertLobbies = '[Lobby] Upsert Lobbies',
+  // UpsertLobbies = '[Lobby] Upsert Lobbies',
   UpdateLobby = '[Lobby] Update Lobby',
   UpdateLobbies = '[Lobby] Update Lobbies',
   DeleteLobby = '[Lobby] Delete Lobby',
@@ -36,20 +36,20 @@ export class AddLobby implements Action {
   constructor(public payload: { lobby: Lobby }) {}
 }
 
-export class UpsertLobby implements Action {
-  readonly type = LobbyActionTypes.UpsertLobby;
-  constructor(public payload: { lobby: Update<Lobby> }) {}
-}
+// export class UpsertLobby implements Action {
+//   readonly type = LobbyActionTypes.UpsertLobby;
+//   constructor(public payload: { lobby: Update<Lobby> }) {}
+// }
 
 export class AddLobbies implements Action {
   readonly type = LobbyActionTypes.AddLobbies;
   constructor(public payload: { lobbies: Lobby[] }) {}
 }
 
-export class UpsertLobbies implements Action {
-  readonly type = LobbyActionTypes.UpsertLobbies;
-  constructor(public payload: { lobbies: Update<Lobby>[] }) {}
-}
+// export class UpsertLobbies implements Action {
+//   readonly type = LobbyActionTypes.UpsertLobbies;
+//   constructor(public payload: { lobbies: Update<Lobby>[] }) {}
+// }
 
 export class UpdateLobby implements Action {
   readonly type = LobbyActionTypes.UpdateLobby;
@@ -80,9 +80,9 @@ export type LobbyActions =
   | AddEvent
   | LoadLobbies
   | AddLobby
-  | UpsertLobby
+  // | UpsertLobby
   | AddLobbies
-  | UpsertLobbies
+  // | UpsertLobbies
   | UpdateLobby
   | UpdateLobbies
   | DeleteLobby

@@ -37,17 +37,17 @@ export function reducer(state = initialState, action: LobbyActions): State {
       return adapter.addOne(action.payload.lobby, state);
     }
 
-    case LobbyActionTypes.UpsertLobby: {
-      return adapter.upsertOne(action.payload.lobby, state);
-    }
+    // case LobbyActionTypes.UpsertLobby: {
+    //   return adapter.upsertOne(action.payload.lobby, state);
+    // }
 
     case LobbyActionTypes.AddLobbies: {
       return adapter.addMany(action.payload.lobbies, state);
     }
 
-    case LobbyActionTypes.UpsertLobbies: {
-      return adapter.upsertMany(action.payload.lobbies, state);
-    }
+    // case LobbyActionTypes.UpsertLobbies: {
+    //   return adapter.upsertMany(action.payload.lobbies, state);
+    // }
 
     case LobbyActionTypes.UpdateLobby: {
       return adapter.updateOne(action.payload.lobby, state);

@@ -145,5 +145,8 @@
     "@ngrx/schematics:service": {
       "spec": false
     }
+  },
+  "cli": {
+    "defaultCollection": "@ngrx/schematics"
   }
 }
