@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { distinctUntilChanged, filter, take, switchMap } from 'rxjs/operators';
-import { combineLatest } from 'rxjs/observable/combineLatest';
+import { combineLatest ,  Observable } from 'rxjs';
 import { environment } from '@env/environment';
 import { connect } from 'socket.io-client';
 import { selectToken, selectLoggedIn } from '@app/auth';
 
 import { selectConnected } from './store/websocket.reducer';
 import * as fromWs from './store/websocket.actions';
-import { Observable } from 'rxjs/Observable';
 import { SubjectMap } from '@app/shared/subject-map';
 
 @Injectable()

@@ -2,14 +2,13 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { RouterNavigationAction } from '@ngrx/router-store';
 import { switchMap, map, catchError, tap, filter } from 'rxjs/operators';
-import { of } from 'rxjs/observable/of';
+import { of ,  Observable } from 'rxjs';
 
 import * as authActions from './auth.actions';
 
 import { AuthService } from '../auth.service';
 import { AuthData } from './auth.models';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class AuthEffects {

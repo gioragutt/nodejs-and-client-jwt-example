@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as fromAuth from '@app/auth';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import * as fromWebsocket from '@app/websocket';
 import { Router } from '@angular/router';
 

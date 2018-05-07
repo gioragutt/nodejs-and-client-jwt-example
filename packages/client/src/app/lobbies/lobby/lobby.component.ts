@@ -7,7 +7,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Lobby, selectSelectedLobby, AddEvent, LobbyEvent } from '../store';
 import { Store } from '@ngrx/store';
 import { tap, map, distinctUntilChanged, filter } from 'rxjs/operators';

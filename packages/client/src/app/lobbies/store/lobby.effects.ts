@@ -12,7 +12,7 @@ import {
   withLatestFrom,
   tap,
 } from 'rxjs/operators';
-import { merge } from 'rxjs/observable/merge';
+import { merge ,  of } from 'rxjs';
 
 import * as fromWebsocket from '@app/websocket';
 import * as fromLobby from './lobby.actions';
@@ -27,7 +27,6 @@ import {
   LobbyEvent,
 } from './lobby.model';
 import { Store } from '@ngrx/store';
-import { of } from 'rxjs/observable/of';
 import { Router } from '@angular/router';
 
 @Injectable()

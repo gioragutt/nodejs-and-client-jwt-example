@@ -1,5 +1,5 @@
 import { Component, HostBinding } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Lobby, selectAllLobbies, FetchLobbies } from '../store';
 import { Store } from '@ngrx/store';
 import { tap } from 'rxjs/operators';
