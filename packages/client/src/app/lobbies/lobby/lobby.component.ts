@@ -8,7 +8,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Lobby, selectSelectedLobby, AddEvent, LobbyEvent } from '../store';
+import { Lobby, selectRoutedLobby, AddEvent, LobbyEvent } from '../store';
 import { Store } from '@ngrx/store';
 import { tap, map, distinctUntilChanged, filter } from 'rxjs/operators';
 import { selectAuthData } from '@app/auth';
@@ -87,7 +87,7 @@ export class PresentationalLobbyComponent {
   `,
 })
 export class LobbyComponent implements OnInit {
-  lobby$ = this.store.select(selectSelectedLobby).pipe(filter(lobby => !!lobby));
+  lobby$ = this.store.select(selectRoutedLobby).pipe(filter(lobby => !!lobby));
   username$ = this.store.select(selectAuthData).pipe(map(data => data && data.profile.username));
   scrollToBottomOnChange = true;
 

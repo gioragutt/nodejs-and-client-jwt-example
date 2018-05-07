@@ -16,7 +16,7 @@ import { merge ,  of } from 'rxjs';
 
 import * as fromWebsocket from '@app/websocket';
 import * as fromLobby from './lobby.actions';
-import { selectLobbyIdFromParams } from './lobby.reducer';
+import { selectLobbyIdFromParams, selectRoutedLobby } from './lobby.reducer';
 
 import { LobbiesService } from '../lobbies.service';
 import {
@@ -60,6 +60,11 @@ export class LobbyEffects {
     private router: Router,
     private store: Store<any>,
   ) {
+
+    this.store.select(selectRoutedLobby)
+      .pipe(filter(lobby => !lobby))
+      .subscribe(() => this.router.navigate(['/lobbies']));
+
     this.websocket.on<Lobby>('lobby_created').subscribe(lobby => {
       this.store.dispatch(new fromLobby.AddLobby({ lobby }));
     });

@@ -91,7 +91,7 @@ export const selectLobbyIdFromParams = createSelector(
   router => router && router.state.params.lobbyId,
 );
 
-export const selectSelectedLobby = createSelector(
+export const selectRoutedLobby = createSelector(
   selectLobbyEntities,
   selectLobbyIdFromParams,
   (lobbies, lobbyId): Lobby => lobbyId && lobbies[lobbyId],
