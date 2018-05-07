@@ -12,6 +12,7 @@ import { LobbiesListComponent } from './lobbies-list';
 import { LobbyComponent, PresentationalLobbyComponent } from './lobby';
 import { LobbyEventComponent } from './lobby-event';
 import { LobbiesHomeComponent } from './lobbies-home/lobbies-home.component';
+import { LobbyExistsGuard } from './lobby-exists.guard';
 
 @NgModule({
   imports: [
@@ -29,6 +30,6 @@ import { LobbiesHomeComponent } from './lobbies-home/lobbies-home.component';
     LobbyEventComponent,
     LobbiesHomeComponent,
   ],
-  providers: [LobbiesService],
+  providers: [LobbiesService, LobbyExistsGuard],
 })
 export class LobbiesModule {}

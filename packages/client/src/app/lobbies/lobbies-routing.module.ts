@@ -5,6 +5,7 @@ import { AuthGuard } from '@app/auth';
 import { LobbiesShellComponent } from './lobbies-shell';
 import { LobbyComponent } from './lobby';
 import { LobbiesHomeComponent } from './lobbies-home';
+import { LobbyExistsGuard } from './lobby-exists.guard';
 
 const routes: Routes = [
   {
@@ -13,7 +14,7 @@ const routes: Routes = [
     component: LobbiesShellComponent,
     children: [
       { path: '', component: LobbiesHomeComponent },
-      { path: ':lobbyId', component: LobbyComponent },
+      { path: ':lobbyId', component: LobbyComponent, canActivate: [LobbyExistsGuard] },
       { path: '**', pathMatch: 'full', redirectTo: '' },
     ],
   },
