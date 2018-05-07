@@ -1,6 +1,6 @@
 import { Component, HostBinding } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Lobby, selectAllLobbies, FetchLobbies } from '../store';
+import { Lobby, FetchLobbies, selectJoinedLobbies } from '../store';
 import { Store } from '@ngrx/store';
 import { tap } from 'rxjs/operators';
 
@@ -13,6 +13,6 @@ export class LobbiesShellComponent {
   @HostBinding('class') hostClass = 'routed-component';
   lobbies$: Observable<Lobby[]>;
   constructor(private store: Store<any>) {
-    this.lobbies$ = this.store.select(selectAllLobbies);
+    this.lobbies$ = this.store.select(selectJoinedLobbies);
   }
 }

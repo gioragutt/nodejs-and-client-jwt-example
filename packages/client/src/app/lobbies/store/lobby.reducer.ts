@@ -5,6 +5,8 @@ import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { selectRouterState } from '@app/router';
 import { RouterStateSnapshot, Params } from '@angular/router';
 import { eventReducer } from './event.reducer';
+import { selectAuthData } from '@app/auth';
+import { isInLobby } from '../utils';
 
 export interface State extends EntityState<Lobby> {
   loading: boolean;
@@ -95,4 +97,12 @@ export const selectRoutedLobby = createSelector(
   selectLobbyEntities,
   selectLobbyIdFromParams,
   (lobbies, lobbyId): Lobby => lobbyId && lobbies[lobbyId],
+);
+
+export const selectJoinedLobbies = createSelector(
+  selectAllLobbies,
+  selectAuthData,
+  ((lobbies, {profile: {username}}): Lobby[] => {
+    return lobbies.filter(lobby => isInLobby(lobby, username));
+  }),
 );
