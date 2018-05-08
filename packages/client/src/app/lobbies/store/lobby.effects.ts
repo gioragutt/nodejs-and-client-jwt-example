@@ -11,12 +11,13 @@ import {
   filter,
   withLatestFrom,
   tap,
+  mergeMap,
 } from 'rxjs/operators';
 import { merge ,  of } from 'rxjs';
 
 import * as fromWebsocket from '@app/websocket';
 import * as fromLobby from './lobby.actions';
-import { selectLobbyIdFromParams, selectRoutedLobby } from './lobby.reducer';
+import { selectLobbyIdFromParams, selectRoutedLobby, selectLobbyById } from './lobby.reducer';
 
 import { LobbiesService } from '../lobbies.service';
 import {
@@ -28,6 +29,7 @@ import {
 } from './lobby.model';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material';
 
 @Injectable()
 export class LobbyEffects {
@@ -59,6 +61,7 @@ export class LobbyEffects {
     private websocket: fromWebsocket.WebsocketService,
     private router: Router,
     private store: Store<any>,
+    public snackBar: MatSnackBar,
   ) {
 
     this.store.select(selectRoutedLobby)
@@ -69,7 +72,10 @@ export class LobbyEffects {
       this.store.dispatch(new fromLobby.AddLobby({ lobby }));
     });
 
-    this.websocket.on<string>('lobby_deleted').subscribe(id => {
+    this.websocket.on<string>('lobby_deleted').pipe(
+      mergeMap(id => this.store.select(selectLobbyById(id))),
+      tap(lobby => this.showLobbyDeletedNotification(lobby)),
+    ).subscribe(({ id }: Lobby) => {
       this.store.dispatch(new fromLobby.DeleteLobby({ id }));
     });
 
@@ -79,6 +85,12 @@ export class LobbyEffects {
       this.websocket.on<MessageLobbyEvent>('message_to_lobby'),
     ).subscribe((event: LobbyEvent) => {
       this.store.dispatch(new fromLobby.AddEvent({ event }));
+    });
+  }
+
+  showLobbyDeletedNotification(lobby: Lobby) {
+    this.snackBar.open(`Lobby ${lobby.name}(${lobby.id}) was deleted!`, 'Dismiss', {
+      duration: 3000,
     });
   }
 }
