@@ -5,7 +5,9 @@ import { map, tap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { selectAuthData, AuthData, selectLoggedIn } from '../store';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class AnonymousGuard implements CanActivate {
   constructor(private store: Store<any>, private router: Router) { }
 

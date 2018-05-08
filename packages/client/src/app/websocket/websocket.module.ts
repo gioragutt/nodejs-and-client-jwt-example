@@ -1,10 +1,9 @@
-import { NgModule, ModuleWithProviders } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StoreModule } from '@ngrx/store';
 import { reducer } from './store';
 import { EffectsModule } from '@ngrx/effects';
 import { WebsocketEffects } from './store';
-import { WebsocketService } from './websocket.service';
 
 @NgModule({
   imports: [
@@ -14,11 +13,4 @@ import { WebsocketService } from './websocket.service';
   ],
   declarations: [],
 })
-export class WebsocketModule {
-  static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: WebsocketModule,
-      providers: [WebsocketService],
-    };
-  }
-}
+export class WebsocketModule { }

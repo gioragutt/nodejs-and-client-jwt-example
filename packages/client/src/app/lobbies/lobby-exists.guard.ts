@@ -5,7 +5,9 @@ import { Store } from '@ngrx/store';
 import { selectRoutedLobby } from './store';
 import { tap, map } from 'rxjs/operators';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class LobbyExistsGuard implements CanActivate {
   constructor(private store: Store<any>, private router: Router) { }
 

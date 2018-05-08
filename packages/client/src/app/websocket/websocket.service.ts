@@ -10,7 +10,9 @@ import { selectConnected } from './store/websocket.reducer';
 import * as fromWs from './store/websocket.actions';
 import { SubjectMap } from '@app/shared/subject-map';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class WebsocketService {
   socket: SocketIOClient.Socket;
   firstConnection$: Observable<{}>;

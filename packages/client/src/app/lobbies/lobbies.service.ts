@@ -4,7 +4,9 @@ import { Lobby } from './store';
 import { Observable } from 'rxjs';
 import { environment } from '@env/environment';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class LobbiesService {
   constructor(private http: HttpClient) {}
 

@@ -25,16 +25,15 @@ import { omit } from 'lodash';
     BrowserModule,
     CoreModule,
     LobbiesModule,
-    WebsocketModule.forRoot(),
+    WebsocketModule,
     StoreModule.forRoot({}),
     EffectsModule.forRoot([]),
     StoreRouterConnectingModule,
     NgrxRouterModule,
-    AuthModule.forRoot(),
+    AuthModule,
     StoreDevtoolsModule.instrument(),
     AppRoutingModule,
   ],
-  providers: [],
   bootstrap: [AppComponent],
 })
 export class AppModule {
