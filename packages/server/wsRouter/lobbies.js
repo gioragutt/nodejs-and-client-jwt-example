@@ -22,11 +22,16 @@ module.exports = async (namespace, socket, username) => {
       namespace.emit('lobby_created', lobby)
       logger.info({username, name}, '[WS] new_lobby_created')
     } catch (e) {
-      logger.error({username, name}, '[WS] lobby_already_exists')
+      logger.error({username, name, e}, '[WS] lobby_already_exists')
     }
   })
 
   socket.on('join_lobby', async ({id}) => {
+    if (!await lobbies.existsById(id)) {
+      logger.warn({id, username}, '[WS] request to join unexisting lobby')
+      return
+    }
+
     if (await lobbies.isOwner(id, username)) {
       logger.warn({id, username}, '[WS] lobby owner can\'t re-join lobby')
       return
@@ -43,6 +48,11 @@ module.exports = async (namespace, socket, username) => {
   })
 
   socket.on('leave_lobby', async ({id}) => {
+    if (!await lobbies.existsById(id)) {
+      logger.warn({id, username}, '[WS] request to leave unexisting lobby')
+      return
+    }
+
     if (await lobbies.isOwner(id, username)) {
       logger.warn({id, username}, '[WS] lobby owner can\'t leave lobby')
       return
@@ -60,6 +70,11 @@ module.exports = async (namespace, socket, username) => {
   })
 
   socket.on('message_to_lobby', async ({id, message}) => {
+    if (!await lobbies.existsById(id)) {
+      logger.warn({id, username, message}, '[WS] request to send message to unexisting lobby')
+      return
+    }
+
     if (!await lobbies.userInLobby(id, username)) {
       logger.warn({username, id, message}, '[WS] user tried to message lobby he\'s not in')
       return
@@ -71,6 +86,11 @@ module.exports = async (namespace, socket, username) => {
   })
 
   socket.on('delete_lobby', async ({id}) => {
+    if (!await lobbies.existsById(id)) {
+      logger.warn({id, username}, '[WS] request to delete unexisting lobby')
+      return
+    }
+
     if (!await lobbies.isOwner(id, username)) {
       logger.warn({id, username}, '[WS] only lobby owners can delete lobbies')
       return
