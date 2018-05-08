@@ -44,6 +44,7 @@ import {
   MatDividerModule,
   MatPaginatorModule,
   MatSortModule,
+  MatBadgeModule,
 } from '@angular/material';
 
 @NgModule({
@@ -93,6 +94,7 @@ import {
     MatDividerModule,
     MatPaginatorModule,
     MatSortModule,
+    MatBadgeModule,
   ],
 })
 export class MaterialModule {}
