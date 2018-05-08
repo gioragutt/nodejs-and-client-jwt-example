@@ -74,6 +74,7 @@ export class LobbyEffects {
 
     this.websocket.on<string>('lobby_deleted').pipe(
       mergeMap(id => this.store.select(selectLobbyById(id))),
+      filter(lobby => !!lobby),
       tap(lobby => this.showLobbyDeletedNotification(lobby)),
     ).subscribe(({ id }: Lobby) => {
       this.store.dispatch(new fromLobby.DeleteLobby({ id }));
@@ -89,7 +90,7 @@ export class LobbyEffects {
   }
 
   showLobbyDeletedNotification(lobby: Lobby) {
-    this.snackBar.open(`Lobby ${lobby.name}(${lobby.id}) was deleted!`, 'Dismiss', {
+    this.snackBar.open(`Lobby ${lobby.name} (${lobby.id}) was deleted!`, 'Dismiss', {
       duration: 3000,
     });
   }
