@@ -1,9 +1,8 @@
 import { DataSource } from '@angular/cdk/collections';
 import { MatPaginator, MatSort } from '@angular/material';
 import { map, tap, switchMap } from 'rxjs/operators';
-import { Observable, of as observableOf, merge } from 'rxjs';
-import { Lobby, selectAllLobbies } from '../store';
-import { Store } from '@ngrx/store';
+import { Observable, merge } from 'rxjs';
+import { Lobby } from '../store';
 import { get } from 'lodash';
 
 /**
@@ -14,10 +13,10 @@ import { get } from 'lodash';
 export class LobbiesHomeDataSource extends DataSource<Lobby> {
   lobbies$: Observable<Lobby[]>;
 
-  constructor(private paginator: MatPaginator, private sort: MatSort, private store: Store<any>) {
+  constructor(private paginator: MatPaginator, private sort: MatSort, lobbies$: Observable<Lobby[]>) {
     super();
 
-    this.lobbies$ = this.store.select(selectAllLobbies).pipe(
+    this.lobbies$ = lobbies$.pipe(
       tap(lobbies => this.paginator.length = (lobbies || []).length),
     );
   }

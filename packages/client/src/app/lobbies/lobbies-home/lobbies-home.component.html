@@ -24,12 +24,12 @@
     <ng-container matColumnDef="actions">
       <mat-header-cell *matHeaderCellDef></mat-header-cell>
       <mat-cell *matCellDef="let row">
-        <button mat-button [routerLink]="['/lobbies', row.id]">Enter</button>
+        <button mat-button (click)="goToLobby(row)">Enter</button>
       </mat-cell>
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;" (dblclick)="goToLobby(row)"></mat-row>
   </mat-table>
 
   <mat-paginator #paginator
