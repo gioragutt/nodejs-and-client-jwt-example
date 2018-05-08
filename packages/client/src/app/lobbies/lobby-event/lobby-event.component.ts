@@ -16,6 +16,11 @@ export class LobbyEventComponent {
 
   @Input() event: LobbyEvent;
   @Input() lobby: Lobby;
+  @Input() myUsername: string;
+
+  get isMyMessage(): boolean {
+    return this.username === this.myUsername;
+  }
 
   get message(): string {
     switch (this.event.event) {

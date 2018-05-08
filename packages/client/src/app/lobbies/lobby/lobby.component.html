@@ -35,6 +35,7 @@
       <app-lobby-event
         *ngFor="let event of scrolledEvents"
         class="event"
+        [myUsername]="username"
         [event]="event"
         [lobby]="lobby"
       ></app-lobby-event>

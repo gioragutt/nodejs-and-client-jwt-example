@@ -1,6 +1,6 @@
 <div class="container">
   <div class="avatar">
-    <mat-icon>{{icon}}</mat-icon>
+    <mat-icon [color]="isMyMessage ? 'primary' : 'default'">{{icon}}</mat-icon>
   </div>
   <div class="event">
     <div class="header">
