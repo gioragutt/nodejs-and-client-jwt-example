@@ -13,7 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@sindresorhus/is": "^0.8.0",
+    "@sindresorhus/is": "^0.17.0",
     "@welldone-software/node-toolbelt": "^1.4.0",
     "app-module-path": "^2.2.0",
     "awaity": "^1.0.0",
