@@ -23,7 +23,7 @@
     "common-tags": "^1.7.2",
     "compression": "^1.7.2",
     "cors": "^2.8.4",
-    "express": "^4.16.3",
+    "express": "^4.17.3",
     "express-status-monitor": "^1.0.1",
     "ioredis": "^3.2.2",
     "lodash": "^4.17.13",
